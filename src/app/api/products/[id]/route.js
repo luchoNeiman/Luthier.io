@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import { connectDB } from "@/lib/mongodb";
-import { getProductById } from "@/lib/products";
+import { getProductById } from "@/lib/guitars";
 import "@/models/Category";
-import Product from "@/models/Product";
+import Product from "@/models/Guitar";
 
 export const dynamic = "force-dynamic";
 

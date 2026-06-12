@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import { revalidatePath } from "next/cache";
 
 import Category from "@/models/Category";
-import Product from "@/models/Product";
+import Product from "@/models/Guitar";
 import { connectDB } from "@/lib/mongodb";
 
 function getCategoryPayload(formData) {

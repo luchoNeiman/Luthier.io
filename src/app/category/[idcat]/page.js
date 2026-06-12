@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import ProductGrid from "@/components/ProductGrid";
 import { getCategoryById } from "@/lib/categories";
-import { getProductsByCategory } from "@/lib/products";
+import { getProductsByCategory } from "@/lib/guitars";
 
 export const dynamic = "force-dynamic";
 

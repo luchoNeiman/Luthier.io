@@ -1,7 +1,7 @@
 import { connectDB } from "@/lib/mongodb";
-import { getProducts } from "@/lib/products";
+import { getProducts } from "@/lib/guitars";
 import "@/models/Category";
-import Product from "@/models/Product";
+import Product from "@/models/Guitar";
 
 export const dynamic = "force-dynamic";
 

@@ -1,5 +1,5 @@
 import ProductGrid from "@/components/ProductGrid";
-import { getProducts } from "@/lib/products";
+import { getProducts } from "@/lib/guitars";
 
 export const dynamic = "force-dynamic";
 

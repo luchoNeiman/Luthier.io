@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import { getCategoryById } from "@/lib/categories";
 import { connectDB } from "@/lib/mongodb";
 import Category from "@/models/Category";
-import Product from "@/models/Product";
+import Product from "@/models/Guitar";
 
 export const dynamic = "force-dynamic";
 

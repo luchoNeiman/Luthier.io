@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 
 import { connectDB } from "@/lib/mongodb";
 import "@/models/Category";
-import Product from "@/models/Product";
+import Product from "@/models/Guitar";
 
 function getProductPayload(formData) {
   return {
