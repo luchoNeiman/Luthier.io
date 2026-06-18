@@ -34,11 +34,11 @@ export default async function CategoryGuitarsPage({ params }) {
           <h1 className="mt-4 max-w-3xl text-4xl font-semibold">
             {category.name}
           </h1>
-          {/* {category.description ? (
+          {category.description ? (
             <p className="mt-4 max-w-2xl text-base text-slate-600">
               {category.description}
             </p>
-          ) : null} */}
+          ) : null}
         </section>
 
         <GuitarGrid guitars={guitars} />

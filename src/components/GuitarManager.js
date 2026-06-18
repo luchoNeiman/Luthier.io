@@ -151,13 +151,13 @@ export default function GuitarManager({
             onChange={handleChange}
             required
           />
-          <textarea
+          {/* <textarea
             className="min-h-28 w-full rounded-lg border border-slate-300 px-4 py-3 outline-none"
             name="description"
             placeholder="Descripcion"
             value={form.description}
             onChange={handleChange}
-          />
+          /> */}
           <input
             className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none"
             name="price"
@@ -283,9 +283,9 @@ export default function GuitarManager({
                     <h3 className="text-xl font-semibold text-slate-900">
                       {guitar.name}
                     </h3>
-                    <p className="mt-2 text-sm text-slate-600">
+                    {/* <p className="mt-2 text-sm text-slate-600">
                       {guitar.description || "Sin descripcion"}
-                    </p>
+                    </p> */}
                   </div>
                   <div className="text-right text-sm text-slate-700">
                     <p>${guitar.price}</p>

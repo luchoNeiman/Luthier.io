@@ -55,9 +55,9 @@ export default function GuitarGrid({ guitars = [] }) {
               </p>
             </div>
 
-            <p className="mt-2 line-clamp-3 text-sm text-slate-600">
+            {/* <p className="mt-2 line-clamp-3 text-sm text-slate-600">
               {guitar.description || "Sin descripcion"}
-            </p>
+            </p> */}
 
             {guitar.categories?.length ? (
               <div className="mt-4 flex flex-wrap gap-2">
