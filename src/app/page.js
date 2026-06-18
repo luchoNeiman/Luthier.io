@@ -1,10 +1,10 @@
-import ProductGrid from "@/components/ProductGrid";
-import { getProducts } from "@/lib/guitars";
+import GuitarGrid from "@/components/GuitarGrid";
+import { getGuitars } from "@/lib/guitars";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const products = await getProducts();
+  const guitars = await getGuitars();
 
   return (
     <main className="min-h-screen bg-slate-50 px-6 py-10 text-slate-900">
@@ -14,7 +14,7 @@ export default async function Home() {
             Programacion 3
           </p>
           <h1 className="mt-4 max-w-3xl text-4xl font-semibold">
-            Productos
+            Guitarras
           </h1>
           <p className="mt-4 max-w-2xl text-base text-slate-600">
             Catalogo publico del ecommerce. La administracion queda disponible
@@ -22,7 +22,7 @@ export default async function Home() {
           </p>
         </section>
 
-        <ProductGrid products={products} />
+        <GuitarGrid guitars={guitars} />
       </div>
     </main>
   );

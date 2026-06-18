@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import ProductGrid from "@/components/ProductGrid";
+import GuitarGrid from "@/components/GuitarGrid";
 import { getCategoryById } from "@/lib/categories";
-import { getProductsByCategory } from "@/lib/guitars";
+import { getGuitarsByCategory } from "@/lib/guitars";
 
 export const dynamic = "force-dynamic";
 
-export default async function CategoryProductsPage({ params }) {
+export default async function CategoryGuitarsPage({ params }) {
   const { idcat } = await params;
   const category = await getCategoryById(idcat);
 
@@ -15,7 +15,7 @@ export default async function CategoryProductsPage({ params }) {
     notFound();
   }
 
-  const products = await getProductsByCategory(category._id);
+  const guitars = await getGuitarsByCategory(category._id);
 
   return (
     <main className="min-h-screen bg-slate-50 px-6 py-10 text-slate-900">
@@ -34,14 +34,14 @@ export default async function CategoryProductsPage({ params }) {
           <h1 className="mt-4 max-w-3xl text-4xl font-semibold">
             {category.name}
           </h1>
-          {category.description ? (
+          {/* {category.description ? (
             <p className="mt-4 max-w-2xl text-base text-slate-600">
               {category.description}
             </p>
-          ) : null}
+          ) : null} */}
         </section>
 
-        <ProductGrid products={products} />
+        <GuitarGrid guitars={guitars} />
       </div>
     </main>
   );

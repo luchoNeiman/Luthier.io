@@ -28,16 +28,20 @@ const guitarSchema = new mongoose.Schema(
       default: "",
       trim: true,
     },
-    // --- Atributos de especificación (Filtros del Configurador) ---
-    type: {
-      //tipo de guitarra
+    categories: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Category",
+      },
+    ],
+    // Atributos de especificación
+    type: { //tipo de guitarra
       type: String,
       required: true,
       enum: ["eléctrica", "acústica", "electroacústica"],
       trim: true,
     },
-    subtype: {
-      //subtipo de guitarra
+    subtype: { //subtipo de guitarra
       type: String,
       enum: [
         "Stratocaster",
@@ -51,71 +55,56 @@ const guitarSchema = new mongoose.Schema(
       default: "No aplica",
       trim: true,
     },
-    brand: {
-      // marca de la guitarra
+    brand: { // marca de la guitarra
       type: String,
       required: true,
       trim: true,
     },
-    model: {
-      // modelo de la guitarra
+    model: { // modelo de la guitarra
       type: String,
       required: true,
       trim: true,
     },
-    orientation: {
-      // orientación de la guitarra
+    orientation: { // orientación de la guitarra
       type: String,
       required: true,
       enum: ["diestro", "zurdo"],
       trim: true,
     },
-    color: {
-      // color de la guitarra
+    color: { // color de la guitarra
       type: String,
       required: true,
       trim: true,
     },
-    stringMaterial: {
-      // material de las cuerdas
+    stringMaterial: { // material de las cuerdas
       type: String,
       required: true,
       enum: ["Nylon", "Acero", "Níquel"],
       trim: true,
     },
-    stringCount: {
-      // cantidad de cuerdas
+    stringCount: { // cantidad de cuerdas
       type: Number,
       required: true,
       min: 0,
       default: 6,
     },
-    fretCount: {
-      // cantidad de trastes
+    fretCount: { // cantidad de trastes
       type: Number,
       required: true,
       min: 0,
     },
-    pickupConfig: {
-      // configuración de pastillas
+    pickupConfig: { // configuración de pastillas
       type: String,
       default: "Ninguno",
       trim: true,
     },
-
-    // categories: [
-    //   {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "Category",
-    //   },
-    // ],
   },
   {
     timestamps: true,
   },
 );
 
-if (mongoose.models.Guitar && !mongoose.models.Guitar.schema.path("type")) {
+if (mongoose.models.Guitar && !mongoose.models.Guitar.schema.path("categories")) {
   mongoose.deleteModel("Guitar");
 }
 

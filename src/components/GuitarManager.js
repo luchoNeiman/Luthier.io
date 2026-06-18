@@ -1,30 +1,36 @@
 "use client";
 
-import {
-  useCallback,
-  useState,
-  useTransition,
-} from "react";
+import { useCallback, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 
 import {
-  createProduct,
-  deleteProduct,
-  updateProduct,
-} from "@/app/actions/products";
+  createGuitar,
+  deleteGuitar,
+  updateGuitar,
+} from "@/app/actions/guitars";
 
 const initialForm = {
   name: "",
-  description: "",
+  // description: "",
   price: "",
   stock: "",
   image: "",
   categories: [],
+  type: "",
+  subtype: "",
+  brand: "",
+  model: "",
+  orientation: "",
+  color: "",
+  stringMaterial: "",
+  stringCount: "",
+  fretCount: "",
+  pickupConfig: "",
 };
 
-export default function ProductManager({
+export default function GuitarManager({
   initialCategories = [],
-  initialProducts = [],
+  initialGuitars = [],
 }) {
   const router = useRouter();
   const [form, setForm] = useState(initialForm);
@@ -38,7 +44,7 @@ export default function ProductManager({
     setEditingId("");
   }, []);
 
-  const refreshProducts = useCallback(() => {
+  const refreshGuitars = useCallback(() => {
     startRefreshTransition(() => {
       router.refresh();
     });
@@ -66,7 +72,9 @@ export default function ProductManager({
     setIsSaving(true);
 
     const formData = new FormData(event.currentTarget);
-    const action = editingId ? updateProduct.bind(null, editingId) : createProduct;
+    const action = editingId
+      ? updateGuitar.bind(null, editingId)
+      : createGuitar;
 
     try {
       const result = await action(null, formData);
@@ -74,35 +82,45 @@ export default function ProductManager({
 
       if (result.ok) {
         resetForm();
-        refreshProducts();
+        refreshGuitars();
       }
     } catch {
-      setMessage("Ocurrio un error al guardar el producto.");
+      setMessage("Ocurrio un error al guardar la guitarra.");
     } finally {
       setIsSaving(false);
     }
   }
 
-  function handleEdit(product) {
-    setEditingId(product._id);
+  function handleEdit(guitar) {
+    setEditingId(guitar._id);
     setForm({
-      name: product.name,
-      description: product.description,
-      price: String(product.price),
-      stock: String(product.stock),
-      image: product.image || "",
-      categories: (product.categories || []).map((category) =>
-        typeof category === "string" ? category : category._id
+      name: guitar.name,
+      // description: guitar.description,
+      price: String(guitar.price),
+      stock: String(guitar.stock),
+      image: guitar.image || "",
+      categories: (guitar.categories || []).map((category) =>
+        typeof category === "string" ? category : category._id,
       ),
+      type: guitar.type || "",
+      subtype: guitar.subtype || "",
+      brand: guitar.brand || "",
+      model: guitar.model || "",
+      orientation: guitar.orientation || "",
+      color: guitar.color || "",
+      stringMaterial: guitar.stringMaterial || "",
+      stringCount: guitar.stringCount || "",
+      fretCount: guitar.fretCount || "",
+      pickupConfig: guitar.pickupConfig || "",
     });
-    setMessage("Editando producto.");
+    setMessage("Editando guitarra.");
   }
 
   async function handleDelete(id) {
-    const result = await deleteProduct(id);
+    const result = await deleteGuitar(id);
 
     if (!result.ok) {
-      setMessage(result.message || "No se pudo eliminar el producto.");
+      setMessage(result.message || "No se pudo eliminar la guitarra.");
       return;
     }
 
@@ -111,17 +129,17 @@ export default function ProductManager({
     }
 
     setMessage(result.message);
-    refreshProducts();
+    refreshGuitars();
   }
 
   return (
     <div className="grid gap-8 lg:grid-cols-[360px_1fr]">
       <section className="rounded-lg border border-black/10 bg-white p-6 shadow-sm">
         <h2 className="text-2xl font-semibold text-slate-900">
-          {editingId ? "Editar producto" : "Nuevo producto"}
+          {editingId ? "Editar guitarra" : "Nueva guitarra"}
         </h2>
         <p className="mt-2 text-sm text-slate-600">
-          Formulario simple para probar los endpoints del CRUD.
+          Formulario simple para probar los endpoints del CRUD de guitarras.
         </p>
 
         <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
@@ -175,7 +193,7 @@ export default function ProductManager({
 
             {initialCategories.length === 0 ? (
               <p className="py-2 text-sm text-slate-500">
-                Crea una categoria antes de asociarla a productos.
+                Crea una categoria antes de asociarla a guitarras.
               </p>
             ) : (
               <div className="grid gap-3">
@@ -226,13 +244,15 @@ export default function ProductManager({
           </div>
         </form>
 
-        {message ? <p className="mt-4 text-sm text-slate-700">{message}</p> : null}
+        {message ? (
+          <p className="mt-4 text-sm text-slate-700">{message}</p>
+        ) : null}
       </section>
 
       <section className="rounded-lg border border-black/10 bg-white p-6 shadow-sm">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-semibold text-slate-900">Productos</h2>
+            <h2 className="text-2xl font-semibold text-slate-900">Guitarras</h2>
             <p className="mt-2 text-sm text-slate-600">
               Lista obtenida desde el container del dashboard.
             </p>
@@ -241,46 +261,54 @@ export default function ProductManager({
             className="rounded-lg border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-700"
             disabled={isRefreshing}
             type="button"
-            onClick={refreshProducts}
+            onClick={refreshGuitars}
           >
             {isRefreshing ? "Recargando..." : "Recargar"}
           </button>
         </div>
 
-        {initialProducts.length === 0 ? (
-          <p className="mt-6 text-slate-600">Todavia no hay productos cargados.</p>
+        {initialGuitars.length === 0 ? (
+          <p className="mt-6 text-slate-600">
+            Todavia no hay guitarras cargadas.
+          </p>
         ) : (
           <div className="mt-6 grid gap-4">
-            {initialProducts.map((product) => (
+            {initialGuitars.map((guitar) => (
               <article
-                key={product._id}
+                key={guitar._id}
                 className="rounded-lg border border-slate-200 p-5"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <h3 className="text-xl font-semibold text-slate-900">{product.name}</h3>
+                    <h3 className="text-xl font-semibold text-slate-900">
+                      {guitar.name}
+                    </h3>
                     <p className="mt-2 text-sm text-slate-600">
-                      {product.description || "Sin descripcion"}
+                      {guitar.description || "Sin descripcion"}
                     </p>
                   </div>
                   <div className="text-right text-sm text-slate-700">
-                    <p>${product.price}</p>
-                    <p>Stock: {product.stock}</p>
+                    <p>${guitar.price}</p>
+                    <p>Stock: {guitar.stock}</p>
                   </div>
                 </div>
 
                 <p className="mt-3 break-all text-xs text-slate-500">
-                  ID: {product._id}
+                  ID: {guitar._id}
                 </p>
 
-                {product.categories?.length ? (
+                {guitar.categories?.length ? (
                   <div className="mt-4 flex flex-wrap gap-2">
-                    {product.categories.map((category) => (
+                    {guitar.categories.map((category) => (
                       <span
-                        key={typeof category === "string" ? category : category._id}
+                        key={
+                          typeof category === "string" ? category : category._id
+                        }
                         className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-800"
                       >
-                        {typeof category === "string" ? category : category.name}
+                        {typeof category === "string"
+                          ? category
+                          : category.name}
                       </span>
                     ))}
                   </div>
@@ -290,14 +318,14 @@ export default function ProductManager({
                   <button
                     className="rounded-lg bg-amber-100 px-4 py-2 text-sm font-semibold text-amber-900"
                     type="button"
-                    onClick={() => handleEdit(product)}
+                    onClick={() => handleEdit(guitar)}
                   >
                     Editar
                   </button>
                   <button
                     className="rounded-lg bg-red-100 px-4 py-2 text-sm font-semibold text-red-900"
                     type="button"
-                    onClick={() => handleDelete(product._id)}
+                    onClick={() => handleDelete(guitar._id)}
                   >
                     Eliminar
                   </button>

@@ -18,7 +18,7 @@ export default async function CategoriesPage() {
             Rubros del ecommerce
           </h1>
           <p className="mt-4 max-w-2xl text-base text-slate-600">
-            Cada categoria lista los productos asociados desde su pagina publica.
+            Cada categoria lista las guitarras asociadas desde su pagina publica.
           </p>
         </section>
 

@@ -1,13 +1,13 @@
-import ProductDashboardContainer from "@/containers/ProductDashboardContainer";
+import GuitarDashboardContainer from "@/containers/GuitarDashboardContainer";
 
 export const dynamic = "force-dynamic";
 
 const endpoints = [
-  "GET /api/products",
-  "POST /api/products",
-  "GET /api/products/:id",
-  "PUT /api/products/:id",
-  "DELETE /api/products/:id",
+  "GET /api/guitars",
+  "POST /api/guitars",
+  "GET /api/guitars/:id",
+  "PUT /api/guitars/:id",
+  "DELETE /api/guitars/:id",
   "GET /api/categories",
   "POST /api/categories",
   "GET /api/categories/:id",
@@ -27,7 +27,7 @@ export default function DashboardPage() {
             Dashboard de ecommerce
           </h1>
           <p className="mt-4 max-w-2xl text-base text-slate-300">
-            Administracion de productos y categorias con Next.js, Route
+            Administracion de guitarras y categorias con Next.js, Route
             Handlers y MongoDB.
           </p>
 
@@ -44,7 +44,7 @@ export default function DashboardPage() {
         </section>
 
         <section className="mt-8">
-          <ProductDashboardContainer />
+          <GuitarDashboardContainer />
         </section>
       </div>
     </main>

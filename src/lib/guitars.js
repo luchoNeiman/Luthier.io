@@ -11,6 +11,14 @@ function serializeGuitar(guitar) {
     price: guitar.price,
     stock: guitar.stock,
     image: guitar.image,
+    categories: (guitar.categories || []).map((category) => {
+      if (category?.name) {
+        return serializeCategory(category);
+      }
+
+      return category.toString();
+    }),
+    
     type: guitar.type,
     subtype: guitar.subtype,
     brand: guitar.brand,
@@ -21,13 +29,6 @@ function serializeGuitar(guitar) {
     stringCount: guitar.stringCount,
     fretCount: guitar.fretCount,
     pickupConfig: guitar.pickupConfig,
-    // categories: (guitar.categories || []).map((category) => {
-    //   if (category?.name) {
-    //     return serializeCategory(category);
-    //   }
-
-    //   return category.toString();
-    // }),
     createdAt: guitar.createdAt?.toISOString(),
     updatedAt: guitar.updatedAt?.toISOString(),
   };

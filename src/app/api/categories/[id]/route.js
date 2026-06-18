@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import { getCategoryById } from "@/lib/categories";
 import { connectDB } from "@/lib/mongodb";
 import Category from "@/models/Category";
-import Product from "@/models/Guitar";
+import Guitar from "@/models/Guitar";
 
 export const dynamic = "force-dynamic";
 
@@ -85,7 +85,7 @@ export async function DELETE(_request, { params }) {
       return Response.json({ message: "Categoria no encontrada" }, { status: 404 });
     }
 
-    await Product.updateMany(
+    await Guitar.updateMany(
       { categories: category._id },
       { $pull: { categories: category._id } }
     );

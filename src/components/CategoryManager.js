@@ -94,7 +94,7 @@ export default function CategoryManager({ initialCategories = [] }) {
           {editingId ? "Editar categoria" : "Nueva categoria"}
         </h2>
         <p className="mt-2 text-sm text-slate-600">
-          Las categorias se pueden asociar a muchos productos.
+          Las categorias se pueden asociar a muchas guitarras.
         </p>
 
         <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
@@ -140,7 +140,7 @@ export default function CategoryManager({ initialCategories = [] }) {
           <div>
             <h2 className="text-2xl font-semibold text-slate-900">Categorias</h2>
             <p className="mt-2 text-sm text-slate-600">
-              Lista de rubros disponibles para los productos.
+              Lista de rubros disponibles para las guitarras.
             </p>
           </div>
           <button
