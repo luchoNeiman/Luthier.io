@@ -104,7 +104,7 @@ const guitarSchema = new mongoose.Schema(
   },
 );
 
-if (mongoose.models.Guitar && !mongoose.models.Guitar.schema.path("categories")) {
+if (mongoose.models.Guitar && !mongoose.models.Guitar.schema.path("type")) {
   mongoose.deleteModel("Guitar");
 }
 
