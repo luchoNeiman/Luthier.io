@@ -258,6 +258,8 @@ Uso esperado de cada endpoint:
 **Comportamiento**
 
 - Cuando un producto se agrega a favoritos, debe actualizarse el estado `favorites` del context.
+
+
 - Cuando un producto se agrega a favoritos y hay usuario logueado, debe guardarse en la base de datos.
 - Cuando un producto se quita de favoritos, debe actualizarse el estado `favorites` del context.
 - Cuando un producto se quita de favoritos y hay usuario logueado, debe quitarse de la base de datos.
@@ -893,7 +895,12 @@ flowchart TD
     I --> J
 ```
 
+## Declaracion de Diseño e Interfaz Asistida por IA
+
+*"El diseño estético de la interfaz de usuario fueron desarrollados mediante Inteligencia Artificial, utilizando un prompt enfocado en conceptos de experiencia de usuario, estructurado por el estudiante para garantizar la fidelidad visual."*
 
 ---------
 
 **Welcome to the e-machine**
+
+

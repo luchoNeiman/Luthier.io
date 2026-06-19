@@ -13,10 +13,24 @@ function getGuitarImageSrc(image) {
   return `/images/guitars/${image}`;
 }
 
+function formatCurrency(value) {
+  const amount = Number(value);
+
+  if (Number.isNaN(amount)) {
+    return `$${value}`;
+  }
+
+  return new Intl.NumberFormat("es-AR", {
+    style: "currency",
+    currency: "ARS",
+    minimumFractionDigits: 2,
+  }).format(amount);
+}
+
 export default function GuitarGrid({ guitars = [] }) {
   if (guitars.length === 0) {
     return (
-      <p className="rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center text-slate-600">
+      <p className="rounded-lg border border-dashed border-stone-300 bg-stone-50 p-8 text-center text-stone-600 shadow-sm">
         Todavia no hay guitarras cargadas.
       </p>
     );
@@ -27,9 +41,9 @@ export default function GuitarGrid({ guitars = [] }) {
       {guitars.map((guitar) => (
         <article
           key={guitar._id}
-          className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm"
+          className="overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900 text-stone-200 shadow-sm"
         >
-          <div className="relative aspect-[4/3] bg-slate-100">
+          <div className="relative aspect-[4/3] bg-zinc-800">
             {guitar.image ? (
               <Image
                 alt={guitar.name}
@@ -39,19 +53,32 @@ export default function GuitarGrid({ guitars = [] }) {
                 src={getGuitarImageSrc(guitar.image)}
               />
             ) : (
-              <div className="flex h-full items-center justify-center px-6 text-center text-sm text-slate-500">
+              <div className="flex h-full items-center justify-center px-6 text-center text-sm text-stone-400">
                 Sin imagen
               </div>
             )}
           </div>
 
           <div className="p-5">
+            <div className="flex flex-wrap gap-2 text-[10px] uppercase tracking-[0.15em]">
+              {guitar.type ? (
+                <span className="rounded-md border border-amber-500/40 bg-amber-500/10 px-2 py-1 text-amber-400">
+                  {guitar.type}
+                </span>
+              ) : null}
+              {guitar.subtype && guitar.subtype !== "No aplica" ? (
+                <span className="rounded-md border border-zinc-700 bg-zinc-800 px-2 py-1 text-stone-300">
+                  {guitar.subtype}
+                </span>
+              ) : null}
+            </div>
+
             <div className="flex items-start justify-between gap-4">
-              <h2 className="text-lg font-semibold text-slate-950">
+              <h2 className="mt-3 text-lg font-semibold text-stone-100">
                 {guitar.name}
               </h2>
-              <p className="shrink-0 text-base font-semibold text-emerald-700">
-                ${guitar.price}
+              <p className="mt-3 shrink-0 font-mono text-base font-semibold text-amber-400">
+                {formatCurrency(guitar.price)}
               </p>
             </div>
 
@@ -65,14 +92,14 @@ export default function GuitarGrid({ guitars = [] }) {
                   typeof category === "string" ? (
                     <span
                       key={category}
-                      className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700"
+                      className="rounded-md border border-zinc-700 bg-zinc-800 px-2 py-1 text-xs font-medium text-stone-300"
                     >
                       {category}
                     </span>
                   ) : (
                     <Link
                       key={category._id}
-                      className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700 hover:bg-emerald-50 hover:text-emerald-800"
+                      className="rounded-md border border-zinc-700 bg-zinc-800 px-2 py-1 text-xs font-medium text-stone-300 transition-colors hover:border-amber-500/60 hover:bg-amber-500/10 hover:text-amber-300"
                       href={`/category/${category._id}`}
                     >
                       {category.name}
@@ -82,7 +109,9 @@ export default function GuitarGrid({ guitars = [] }) {
               </div>
             ) : null}
 
-            <p className="mt-4 text-sm text-slate-500">Stock: {guitar.stock}</p>
+            <p className="mt-4 border-t border-zinc-800 pt-3 font-mono text-xs uppercase tracking-[0.12em] text-stone-400">
+              Stock: {String(guitar.stock).padStart(2, "0")}
+            </p>
           </div>
         </article>
       ))}
