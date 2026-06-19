@@ -46,7 +46,7 @@ export default function GuitarGrid({ guitars = [] }) {
           <div className="relative aspect-[4/3] bg-zinc-800">
             {guitar.image ? (
               <Image
-                alt={guitar.name}
+                alt={guitar.name || "Guitarra de Autor Custom"}
                 className="object-cover"
                 fill
                 sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
