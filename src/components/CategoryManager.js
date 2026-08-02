@@ -56,7 +56,7 @@ export default function CategoryManager({ initialCategories = [] }) {
         refreshCategories();
       }
     } catch {
-      setMessage("Ocurrio un error al guardar la categoria.");
+      setMessage("Ocurrio un error al guardar la coleccion.");
     } finally {
       setIsSaving(false);
     }
@@ -68,14 +68,14 @@ export default function CategoryManager({ initialCategories = [] }) {
       name: category.name,
       description: category.description,
     });
-    setMessage("Editando categoria.");
+    setMessage("Editando coleccion.");
   }
 
   async function handleDelete(id) {
     const result = await deleteCategory(id);
 
     if (!result.ok) {
-      setMessage(result.message || "No se pudo eliminar la categoria.");
+      setMessage(result.message || "No se pudo eliminar la coleccion.");
       return;
     }
 
@@ -91,17 +91,18 @@ export default function CategoryManager({ initialCategories = [] }) {
     <div className="grid gap-8 lg:grid-cols-[360px_1fr]">
       <section className="rounded-lg border border-black/10 bg-white p-6 shadow-sm">
         <h2 className="text-2xl font-semibold text-slate-900">
-          {editingId ? "Editar categoria" : "Nueva categoria"}
+          {editingId ? "Editar coleccion" : "Nueva coleccion"}
         </h2>
         <p className="mt-2 text-sm text-slate-600">
-          Las categorias se pueden asociar a muchas guitarras.
+          Colecciones comerciales para segmentar la tienda (ej: Edicion Limitada,
+          Outlet, Principiantes).
         </p>
 
         <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
           <input
             className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none"
             name="name"
-            placeholder="Nombre"
+            placeholder="Nombre de coleccion (ej: Edicion Limitada, Outlet, Principiantes)"
             value={form.name}
             onChange={handleChange}
             required
@@ -138,9 +139,11 @@ export default function CategoryManager({ initialCategories = [] }) {
       <section className="rounded-lg border border-black/10 bg-white p-6 shadow-sm">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-semibold text-slate-900">Categorias</h2>
+            <h2 className="text-2xl font-semibold text-slate-900">
+              Colecciones Comerciales
+            </h2>
             <p className="mt-2 text-sm text-slate-600">
-              Lista de rubros disponibles para las guitarras.
+              Lista de segmentos visibles para el catalogo de guitarras.
             </p>
           </div>
           <button
@@ -154,7 +157,9 @@ export default function CategoryManager({ initialCategories = [] }) {
         </div>
 
         {initialCategories.length === 0 ? (
-          <p className="mt-6 text-slate-600">Todavia no hay categorias cargadas.</p>
+          <p className="mt-6 text-slate-600">
+            Todavia no hay colecciones comerciales cargadas.
+          </p>
         ) : (
           <div className="mt-6 grid gap-4">
             {initialCategories.map((category) => (

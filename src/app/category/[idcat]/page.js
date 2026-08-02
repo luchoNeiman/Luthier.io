@@ -18,7 +18,7 @@ export default async function CategoryGuitarsPage({ params }) {
   const guitars = await getGuitarsByCategory(category._id);
 
   return (
-    <main className="min-h-screen bg-slate-50 px-6 py-10 text-slate-900">
+    <main className="min-h-screen bg-stone-50 px-6 py-10 text-stone-900">
       <div className="mx-auto max-w-6xl">
         <Link
           className="text-sm font-medium text-emerald-700 hover:text-emerald-900"
@@ -29,13 +29,13 @@ export default async function CategoryGuitarsPage({ params }) {
 
         <section className="mb-8 mt-6">
           <p className="text-sm uppercase tracking-[0.3em] text-emerald-500">
-            Categoria
+            Coleccion
           </p>
-          <h1 className="mt-4 max-w-3xl text-4xl font-semibold">
-            {category.name}
+          <h1 className="mt-4 max-w-3xl text-4xl font-semibold text-stone-900">
+            Catalogo de la coleccion: {category.name}
           </h1>
           {category.description ? (
-            <p className="mt-4 max-w-2xl text-base text-slate-600">
+            <p className="mt-4 max-w-2xl text-base text-stone-600">
               {category.description}
             </p>
           ) : null}
