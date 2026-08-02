@@ -19,16 +19,16 @@ export default async function CustomizePage() {
   ]);
 
   return (
-    <main className="min-h-screen px-6 py-10 text-stone-800">
+    <main className="min-h-screen bg-zinc-950 px-6 py-10 text-zinc-200">
       <div className="mx-auto max-w-6xl space-y-8">
         <header className="space-y-3">
-          <p className="text-xs uppercase tracking-[0.35em] text-amber-700">
+          <p className="text-xs uppercase tracking-[0.35em] text-amber-400">
             Premium Analog Workshop
           </p>
-          <h1 className="text-4xl font-semibold leading-tight text-stone-900 md:text-5xl">
+          <h1 className="text-4xl font-semibold leading-tight text-zinc-100 md:text-5xl">
             Custom Shop
           </h1>
-          <p className="max-w-2xl text-base text-stone-600">
+          <p className="max-w-2xl text-base text-zinc-400">
             Configura tipo, subtipo, color y orientacion para encontrar la
             guitarra que coincide con tu criterio tecnico exacto.
           </p>

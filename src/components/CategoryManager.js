@@ -89,18 +89,18 @@ export default function CategoryManager({ initialCategories = [] }) {
 
   return (
     <div className="grid gap-8 lg:grid-cols-[360px_1fr]">
-      <section className="rounded-lg border border-black/10 bg-white p-6 shadow-sm">
-        <h2 className="text-2xl font-semibold text-slate-900">
+      <section className="rounded-xl border border-white/10 bg-white/5 p-6 text-zinc-200 shadow-[0_12px_28px_rgba(0,0,0,0.35)] backdrop-blur-md">
+        <h2 className="text-2xl font-semibold text-zinc-100">
           {editingId ? "Editar coleccion" : "Nueva coleccion"}
         </h2>
-        <p className="mt-2 text-sm text-slate-600">
+        <p className="mt-2 text-sm text-zinc-400">
           Colecciones comerciales para segmentar la tienda (ej: Edicion Limitada,
           Outlet, Principiantes).
         </p>
 
         <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
           <input
-            className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none"
+            className="w-full rounded-lg border border-zinc-800 bg-black/50 px-4 py-3 text-zinc-100 outline-none transition-all focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
             name="name"
             placeholder="Nombre de coleccion (ej: Edicion Limitada, Outlet, Principiantes)"
             value={form.name}
@@ -108,7 +108,7 @@ export default function CategoryManager({ initialCategories = [] }) {
             required
           />
           <textarea
-            className="min-h-28 w-full rounded-lg border border-slate-300 px-4 py-3 outline-none"
+            className="min-h-28 w-full rounded-lg border border-zinc-800 bg-black/50 px-4 py-3 text-zinc-100 outline-none transition-all focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
             name="description"
             placeholder="Descripcion"
             value={form.description}
@@ -117,14 +117,14 @@ export default function CategoryManager({ initialCategories = [] }) {
 
           <div className="flex gap-3">
             <button
-              className="rounded-lg bg-slate-900 px-4 py-3 text-sm font-semibold text-white"
+              className="rounded-lg bg-amber-600 px-4 py-3 text-sm font-semibold text-zinc-900 transition-all hover:bg-amber-500 hover:shadow-[0_0_15px_rgba(245,158,11,0.3)]"
               disabled={isSaving}
               type="submit"
             >
               {isSaving ? "Guardando..." : editingId ? "Actualizar" : "Crear"}
             </button>
             <button
-              className="rounded-lg border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-700"
+              className="rounded-lg border border-zinc-700 px-4 py-3 text-sm font-semibold text-zinc-200 transition-all hover:border-amber-500/50 hover:text-amber-400"
               type="button"
               onClick={resetForm}
             >
@@ -133,21 +133,21 @@ export default function CategoryManager({ initialCategories = [] }) {
           </div>
         </form>
 
-        {message ? <p className="mt-4 text-sm text-slate-700">{message}</p> : null}
+        {message ? <p className="mt-4 text-sm text-zinc-300">{message}</p> : null}
       </section>
 
-      <section className="rounded-lg border border-black/10 bg-white p-6 shadow-sm">
+      <section className="rounded-xl border border-white/10 bg-white/5 p-6 text-zinc-200 shadow-[0_12px_28px_rgba(0,0,0,0.35)] backdrop-blur-md">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-semibold text-slate-900">
+            <h2 className="text-2xl font-semibold text-zinc-100">
               Colecciones Comerciales
             </h2>
-            <p className="mt-2 text-sm text-slate-600">
+            <p className="mt-2 text-sm text-zinc-400">
               Lista de segmentos visibles para el catalogo de guitarras.
             </p>
           </div>
           <button
-            className="rounded-lg border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-700"
+            className="rounded-lg border border-zinc-700 px-4 py-3 text-sm font-semibold text-zinc-200 transition-all hover:border-amber-500/50 hover:text-amber-400"
             disabled={isRefreshing}
             type="button"
             onClick={refreshCategories}
@@ -157,7 +157,7 @@ export default function CategoryManager({ initialCategories = [] }) {
         </div>
 
         {initialCategories.length === 0 ? (
-          <p className="mt-6 text-slate-600">
+          <p className="mt-6 text-zinc-400">
             Todavia no hay colecciones comerciales cargadas.
           </p>
         ) : (
@@ -165,28 +165,28 @@ export default function CategoryManager({ initialCategories = [] }) {
             {initialCategories.map((category) => (
               <article
                 key={category._id}
-                className="rounded-lg border border-slate-200 p-5"
+                className="rounded-xl border border-white/10 bg-black/30 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-amber-500/40 hover:shadow-[0_0_15px_rgba(245,158,11,0.3)]"
               >
-                <h3 className="text-xl font-semibold text-slate-900">
+                <h3 className="text-xl font-semibold text-zinc-100">
                   {category.name}
                 </h3>
-                <p className="mt-2 text-sm text-slate-600">
+                <p className="mt-2 text-sm text-zinc-400">
                   {category.description || "Sin descripcion"}
                 </p>
-                <p className="mt-3 break-all text-xs text-slate-500">
+                <p className="mt-3 break-all text-xs text-zinc-500">
                   ID: {category._id}
                 </p>
 
                 <div className="mt-4 flex gap-3">
                   <button
-                    className="rounded-lg bg-amber-100 px-4 py-2 text-sm font-semibold text-amber-900"
+                    className="rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-2 text-sm font-semibold text-amber-300 transition-all hover:bg-amber-500/20"
                     type="button"
                     onClick={() => handleEdit(category)}
                   >
                     Editar
                   </button>
                   <button
-                    className="rounded-lg bg-red-100 px-4 py-2 text-sm font-semibold text-red-900"
+                    className="rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-2 text-sm font-semibold text-red-300 transition-all hover:bg-red-500/20"
                     type="button"
                     onClick={() => handleDelete(category._id)}
                   >

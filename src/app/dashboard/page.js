@@ -2,48 +2,21 @@ import GuitarDashboardContainer from "@/containers/GuitarDashboardContainer";
 
 export const dynamic = "force-dynamic";
 
-const endpoints = [
-  "GET /api/guitars",
-  "POST /api/guitars",
-  "GET /api/guitars/:id",
-  "PUT /api/guitars/:id",
-  "DELETE /api/guitars/:id",
-  "GET /api/categories",
-  "POST /api/categories",
-  "GET /api/categories/:id",
-  "PUT /api/categories/:id",
-  "DELETE /api/categories/:id",
-];
-
 export default function DashboardPage() {
   return (
-    <main className="min-h-screen bg-slate-100 px-6 py-10 text-slate-900">
-      <div className="mx-auto max-w-6xl">
-        <section className="rounded-lg bg-slate-900 px-8 py-10 text-white shadow-xl">
-          <p className="text-sm uppercase tracking-[0.3em] text-emerald-300">
-            Programacion 3
-          </p>
-          <h1 className="mt-4 max-w-3xl text-4xl font-semibold">
-            Dashboard de ecommerce
+    <main className="min-h-screen bg-zinc-950 px-6 py-10 text-zinc-200">
+      <div className="mx-auto max-w-6xl space-y-6">
+        <header>
+          <h1 className="text-4xl font-semibold text-zinc-200 md:text-5xl">
+            Panel de Control Luthier
           </h1>
-          <p className="mt-4 max-w-2xl text-base text-slate-300">
-            Administracion de guitarras y categorias con Next.js, Route
-            Handlers y MongoDB.
+          <p className="mt-3 max-w-2xl text-sm text-zinc-500 md:text-base">
+            Gestion integral del catalogo, stock y colecciones comerciales con
+            enfoque operativo para el taller boutique.
           </p>
+        </header>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            {endpoints.map((endpoint) => (
-              <span
-                key={endpoint}
-                className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm"
-              >
-                {endpoint}
-              </span>
-            ))}
-          </div>
-        </section>
-
-        <section className="mt-8">
+        <section className="rounded-xl border border-white/10 bg-white/5 p-6 shadow-[0_18px_40px_rgba(0,0,0,0.35)] backdrop-blur-md">
           <GuitarDashboardContainer />
         </section>
       </div>

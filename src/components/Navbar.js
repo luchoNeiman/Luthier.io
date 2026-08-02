@@ -11,8 +11,8 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-40 border-b border-zinc-800 bg-zinc-950/95 backdrop-blur-md">
       <nav className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-4 text-stone-300 sm:flex-row sm:items-center sm:justify-between">
-        <Link className="text-lg font-bold uppercase tracking-widest text-white" href="/">
-          Luthier.io
+        <Link className="logo-color-cycle text-lg font-bold uppercase tracking-widest" href="/">
+          LUTHIER.IO
         </Link>
 
         <div className="flex flex-wrap gap-2">

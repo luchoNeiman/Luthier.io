@@ -133,20 +133,20 @@ export default function GuitarManager({
   }
 
   const inputClass =
-    "w-full rounded-md border border-zinc-700 bg-zinc-950 px-4 py-2.5 text-sm text-stone-200 outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30";
+    "w-full rounded-md border border-zinc-800 bg-black/50 px-4 py-2.5 text-sm text-zinc-100 outline-none transition-all focus:border-amber-500 focus:ring-1 focus:ring-amber-500";
   const selectClass =
-    "w-full rounded-md border border-zinc-700 bg-zinc-950 px-3 py-2.5 text-sm text-stone-200 outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30";
+    "w-full rounded-md border border-zinc-800 bg-black/50 px-3 py-2.5 text-sm text-zinc-100 outline-none transition-all focus:border-amber-500 focus:ring-1 focus:ring-amber-500";
   const sectionLabelClass =
-    "mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-stone-300";
+    "mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-zinc-300";
 
   return (
     <div className="grid gap-8 lg:grid-cols-[400px_1fr]">
       {/* SECCIÓN DEL FORMULARIO */}
-      <section className="h-fit rounded-lg border border-zinc-800 bg-zinc-900 p-6 text-stone-200 shadow-sm">
-        <h2 className="text-2xl font-semibold text-stone-100">
+      <section className="h-fit rounded-xl border border-white/10 bg-white/5 p-6 text-zinc-200 shadow-[0_12px_28px_rgba(0,0,0,0.35)] backdrop-blur-md">
+        <h2 className="text-2xl font-semibold text-zinc-100">
           {editingId ? "Editar guitarra" : "Nueva guitarra"}
         </h2>
-        <p className="mt-2 text-sm text-stone-400">
+        <p className="mt-2 text-sm text-zinc-400">
           Formulario para administrar el catálogo y las especificaciones
           técnicas.
         </p>
@@ -200,7 +200,7 @@ export default function GuitarManager({
           />
 
           {/* CAMPOS ESPECÍFICOS DEL CONFIGURADOR */}
-          <div className="space-y-4 border-t border-zinc-800 pt-4">
+          <div className="space-y-4 border-t border-white/10 pt-4">
             <label className={sectionLabelClass}>
               Especificaciones Técnicas
             </label>
@@ -340,13 +340,13 @@ export default function GuitarManager({
           </div>
 
           {/* FIELDSET DE CATEGORÍAS */}
-          <fieldset className="rounded-md border border-zinc-700 px-4 py-3">
-            <legend className="px-1 text-xs font-semibold uppercase tracking-[0.12em] text-stone-300">
+          <fieldset className="rounded-md border border-zinc-800 px-4 py-3">
+            <legend className="px-1 text-xs font-semibold uppercase tracking-[0.12em] text-zinc-300">
               Categorias Comerciales
             </legend>
 
             {initialCategories.length === 0 ? (
-              <p className="py-2 text-sm text-stone-400">
+              <p className="py-2 text-sm text-zinc-400">
                 Crea una categoria antes de asociarla a guitarras.
               </p>
             ) : (
@@ -354,7 +354,7 @@ export default function GuitarManager({
                 {initialCategories.map((category) => (
                   <label
                     key={category._id}
-                    className="flex cursor-pointer items-start gap-3 rounded-md border border-zinc-700 bg-zinc-950 px-3 py-1.5 text-xs text-stone-300 transition-colors hover:border-amber-500/50 hover:bg-zinc-900"
+                    className="flex cursor-pointer items-start gap-3 rounded-md border border-zinc-800 bg-black/40 px-3 py-1.5 text-xs text-zinc-300 transition-all hover:border-amber-500/50 hover:shadow-[0_0_15px_rgba(245,158,11,0.3)]"
                   >
                     <input
                       checked={form.categories.includes(category._id)}
@@ -365,7 +365,7 @@ export default function GuitarManager({
                       onChange={handleCategoryChange}
                     />
                     <span>
-                      <span className="block font-medium text-stone-100">
+                      <span className="block font-medium text-zinc-100">
                         {category.name}
                       </span>
                     </span>
@@ -388,7 +388,7 @@ export default function GuitarManager({
                   : "Crear Guitarra"}
             </button>
             <button
-              className="rounded-md border border-zinc-700 px-4 py-2.5 text-sm font-semibold text-stone-200 transition-colors hover:border-amber-500/50 hover:text-amber-400"
+              className="rounded-md border border-zinc-700 px-4 py-2.5 text-sm font-semibold text-zinc-200 transition-all hover:border-amber-500/50 hover:text-amber-400"
               type="button"
               onClick={resetForm}
             >
@@ -405,18 +405,18 @@ export default function GuitarManager({
       </section>
 
       {/* SECCIÓN DEL LISTADO DE GUITARRAS */}
-      <section className="rounded-lg border border-zinc-800 bg-zinc-900 p-6 text-stone-200 shadow-sm">
+      <section className="rounded-xl border border-white/10 bg-white/5 p-6 text-zinc-200 shadow-[0_12px_28px_rgba(0,0,0,0.35)] backdrop-blur-md">
         <div className="flex items-center justify-between gap-4 border-b border-zinc-800 pb-4">
           <div>
-            <h2 className="text-2xl font-semibold text-stone-100">
+            <h2 className="text-2xl font-semibold text-zinc-100">
               Guitarras Registradas
             </h2>
-            <p className="mt-2 text-sm text-stone-400">
+            <p className="mt-2 text-sm text-zinc-400">
               Inventario de instrumentos disponibles en la base de datos.
             </p>
           </div>
           <button
-            className="rounded-md border border-zinc-700 px-4 py-2 text-sm font-semibold text-stone-200 transition-colors hover:border-amber-500/50 hover:text-amber-400"
+            className="rounded-md border border-zinc-700 px-4 py-2 text-sm font-semibold text-zinc-200 transition-all hover:border-amber-500/50 hover:text-amber-400"
             disabled={isRefreshing}
             type="button"
             onClick={refreshGuitars}
@@ -426,7 +426,7 @@ export default function GuitarManager({
         </div>
 
         {initialGuitars.length === 0 ? (
-          <p className="mt-6 italic text-stone-400">
+          <p className="mt-6 italic text-zinc-400">
             No hay guitarras cargadas en el sistema todavía.
           </p>
         ) : (
@@ -434,7 +434,7 @@ export default function GuitarManager({
             {initialGuitars.map((guitar) => (
               <article
                 key={guitar._id}
-                className="flex flex-col justify-between rounded-lg border border-zinc-700 bg-zinc-950 p-5 transition-shadow hover:shadow-sm"
+                className="flex flex-col justify-between rounded-xl border border-white/10 bg-black/30 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-amber-500/40 hover:shadow-[0_0_15px_rgba(245,158,11,0.3)]"
               >
                 <div>
                   <div className="flex items-start justify-between gap-4">
@@ -445,23 +445,23 @@ export default function GuitarManager({
                           ? `• ${guitar.subtype}`
                           : ""}
                       </span>
-                      <h3 className="text-lg font-bold leading-tight text-stone-100">
+                      <h3 className="text-lg font-bold leading-tight text-zinc-100">
                         {guitar.name}
                       </h3>
-                      <p className="mt-1 text-xs text-stone-400">
+                      <p className="mt-1 text-xs text-zinc-400">
                         {guitar.brand} {guitar.model} ({guitar.color})
                       </p>
                     </div>
-                    <div className="whitespace-nowrap text-right text-sm font-semibold text-stone-100">
+                    <div className="whitespace-nowrap text-right text-sm font-semibold text-zinc-100">
                       <p className="font-mono text-amber-400">${guitar.price}</p>
-                      <p className="mt-0.5 font-mono text-xs font-normal text-stone-400">
+                      <p className="mt-0.5 font-mono text-xs font-normal text-zinc-400">
                         Stock: {guitar.stock}
                       </p>
                     </div>
                   </div>
 
                   {/* CARACTERÍSTICAS TÉCNICAS ADICIONALES EN VISTA DE LISTA */}
-                  <div className="mt-3 grid grid-cols-2 gap-x-2 gap-y-1 rounded-md border border-zinc-700 bg-zinc-900 p-2 text-[11px] text-stone-300">
+                  <div className="mt-3 grid grid-cols-2 gap-x-2 gap-y-1 rounded-md border border-zinc-800 bg-black/40 p-2 text-[11px] text-zinc-300">
                     <p>
                       <strong>Orientación:</strong> {guitar.orientation}
                     </p>
@@ -478,8 +478,8 @@ export default function GuitarManager({
                   </div>
                 </div>
 
-                <div className="mt-4 flex items-center justify-between gap-3 border-t border-zinc-800 pt-3">
-                  <p className="select-all break-all font-mono text-[10px] text-stone-500">
+                <div className="mt-4 flex items-center justify-between gap-3 border-t border-white/10 pt-3">
+                  <p className="select-all break-all font-mono text-[10px] text-zinc-500">
                     ID: {guitar._id}
                   </p>
 
@@ -508,7 +508,7 @@ export default function GuitarManager({
                         key={
                           typeof category === "string" ? category : category._id
                         }
-                        className="rounded-md border border-zinc-700 bg-zinc-900 px-2 py-0.5 text-[10px] font-medium text-stone-300"
+                        className="rounded-md border border-zinc-800 bg-black/40 px-2 py-0.5 text-[10px] font-medium text-zinc-300"
                       >
                         {typeof category === "string"
                           ? category

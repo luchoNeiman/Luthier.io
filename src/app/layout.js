@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "CRUD de Guitarras",
-  description: "Ejemplo simple de ecommerce con Next.js y MongoDB",
+  title: "Luthier.io | Boutique de Guitarras",
+  description: "Ecommerce de guitarras custom con experiencia premium",
 };
 
 export default function RootLayout({ children }) {
@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-stone-50 text-stone-800">
+      <body className="min-h-full flex flex-col bg-zinc-950 text-zinc-100">
         <Navbar />
         {children}
       </body>

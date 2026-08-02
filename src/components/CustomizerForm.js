@@ -19,7 +19,7 @@ function getImageSrc(image) {
     return image;
   }
 
-  return `/images/products/${image}`;
+  return `/images/guitars/${image}`;
 }
 
 function formatCurrency(value) {
@@ -51,8 +51,6 @@ export default function CustomizerForm({ options }) {
 
   useEffect(() => {
     if (Object.keys(activeFilters).length === 0) {
-      setResult(null);
-      setIsLoading(false);
       return;
     }
 
@@ -102,28 +100,40 @@ export default function CustomizerForm({ options }) {
 
   function handleFilterChange(event) {
     const { name, value } = event.target;
-    setFilters((previous) => ({ ...previous, [name]: value }));
+    setFilters((previous) => {
+      const nextFilters = { ...previous, [name]: value };
+      const hasActiveFilters = Object.values(nextFilters).some(
+        (filterValue) => filterValue.trim() !== "",
+      );
+
+      if (!hasActiveFilters) {
+        setResult(null);
+        setIsLoading(false);
+      }
+
+      return nextFilters;
+    });
   }
 
   return (
     <section className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-      <article className="rounded-xl border border-stone-300 bg-stone-100 p-5 shadow-sm">
-        <p className="text-xs uppercase tracking-[0.28em] text-stone-500">
+      <article className="min-h-[500px] rounded-xl border border-white/10 bg-white/5 p-5 text-zinc-200 shadow-[0_12px_28px_rgba(0,0,0,0.35)] backdrop-blur-md">
+        <p className="text-xs uppercase tracking-[0.28em] text-zinc-400">
           Visualizador
         </p>
 
-        <div className="mt-4 rounded-lg border border-stone-300 bg-white p-4">
+        <div className="mt-4 min-h-[440px] w-full rounded-lg border border-white/10 bg-black/30 p-4">
           {isLoading ? (
-            <div className="flex min-h-[340px] flex-col items-center justify-center gap-3 text-stone-500">
+            <div className="flex min-h-[408px] w-full flex-col items-center justify-center gap-3 text-zinc-400">
               <span className="h-3 w-3 animate-pulse rounded-full bg-amber-500" />
               <p className="text-sm">Buscando combinacion ideal...</p>
             </div>
           ) : hasResult ? (
-            <div className="space-y-4">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-lg border border-stone-200 bg-stone-50">
+            <div className="flex min-h-[408px] w-full flex-col justify-between gap-4">
+              <div className="relative h-[340px] w-full overflow-hidden rounded-lg border border-white/10 bg-black/20">
                 <Image
                   alt={result.name || "Guitarra personalizada"}
-                  className="object-cover"
+                  className="object-contain object-center p-3"
                   fill
                   sizes="(min-width: 1024px) 50vw, 100vw"
                   src={getImageSrc(result.image)}
@@ -131,30 +141,30 @@ export default function CustomizerForm({ options }) {
               </div>
 
               <div>
-                <p className="text-lg font-semibold text-stone-900">{result.name}</p>
-                <p className="font-mono text-xl font-semibold text-amber-600">
+                <p className="text-lg font-semibold text-zinc-100">{result.name}</p>
+                <p className="font-mono text-xl font-semibold text-amber-300">
                   {formatCurrency(result.price)}
                 </p>
               </div>
             </div>
           ) : (
-            <div className="flex min-h-[340px] items-center justify-center rounded-lg border border-dashed border-stone-300 bg-stone-50 px-6 text-center text-sm text-stone-500">
+            <div className="flex min-h-[408px] w-full items-center justify-center rounded-lg border border-dashed border-white/15 bg-black/20 px-6 text-center text-sm text-zinc-400">
               Elegi los selectores para encontrar una guitarra disponible.
             </div>
           )}
         </div>
       </article>
 
-      <article className="rounded-xl border border-zinc-700 bg-zinc-900 p-5 text-stone-200 shadow-sm">
+      <article className="rounded-xl border border-white/10 bg-white/5 p-5 text-zinc-200 shadow-[0_12px_28px_rgba(0,0,0,0.35)] backdrop-blur-md">
         <p className="text-xs uppercase tracking-[0.28em] text-amber-400">
           Custom Shop Controls
         </p>
 
         <div className="mt-5 space-y-4">
           <label className="block space-y-2 text-sm">
-            <span className="text-stone-300">Tipo</span>
+            <span className="text-zinc-300">Tipo</span>
             <select
-              className="w-full rounded-md border border-zinc-700 bg-zinc-950 px-3 py-2 text-stone-100 outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500"
+              className="w-full rounded-md border border-zinc-800 bg-black/50 px-3 py-2 text-zinc-100 outline-none transition-all focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
               name="type"
               onChange={handleFilterChange}
               value={filters.type}
@@ -169,9 +179,9 @@ export default function CustomizerForm({ options }) {
           </label>
 
           <label className="block space-y-2 text-sm">
-            <span className="text-stone-300">Subtipo</span>
+            <span className="text-zinc-300">Subtipo</span>
             <select
-              className="w-full rounded-md border border-zinc-700 bg-zinc-950 px-3 py-2 text-stone-100 outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500"
+              className="w-full rounded-md border border-zinc-800 bg-black/50 px-3 py-2 text-zinc-100 outline-none transition-all focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
               name="subtype"
               onChange={handleFilterChange}
               value={filters.subtype}
@@ -186,9 +196,9 @@ export default function CustomizerForm({ options }) {
           </label>
 
           <label className="block space-y-2 text-sm">
-            <span className="text-stone-300">Color</span>
+            <span className="text-zinc-300">Color</span>
             <select
-              className="w-full rounded-md border border-zinc-700 bg-zinc-950 px-3 py-2 text-stone-100 outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500"
+              className="w-full rounded-md border border-zinc-800 bg-black/50 px-3 py-2 text-zinc-100 outline-none transition-all focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
               name="color"
               onChange={handleFilterChange}
               value={filters.color}
@@ -203,9 +213,9 @@ export default function CustomizerForm({ options }) {
           </label>
 
           <label className="block space-y-2 text-sm">
-            <span className="text-stone-300">Orientacion</span>
+            <span className="text-zinc-300">Orientacion</span>
             <select
-              className="w-full rounded-md border border-zinc-700 bg-zinc-950 px-3 py-2 text-stone-100 outline-none transition focus:border-amber-500 focus:ring-2 focus:ring-amber-500"
+              className="w-full rounded-md border border-zinc-800 bg-black/50 px-3 py-2 text-zinc-100 outline-none transition-all focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
               name="orientation"
               onChange={handleFilterChange}
               value={filters.orientation}
@@ -221,7 +231,7 @@ export default function CustomizerForm({ options }) {
         </div>
 
         <button
-          className="mt-6 w-full rounded-md bg-amber-600 px-4 py-2 font-medium text-stone-900 transition enabled:hover:bg-amber-500 disabled:cursor-not-allowed disabled:opacity-50"
+          className="mt-6 w-full rounded-md bg-amber-600 px-4 py-2 font-medium text-zinc-900 transition-all enabled:hover:bg-amber-500 enabled:hover:shadow-[0_0_15px_rgba(245,158,11,0.3)] disabled:cursor-not-allowed disabled:opacity-50"
           disabled={!hasResult}
           type="button"
         >
