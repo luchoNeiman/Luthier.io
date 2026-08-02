@@ -21,6 +21,7 @@ export default function CategoryManager({ initialCategories = [] }) {
   const [message, setMessage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [isRefreshing, startRefreshTransition] = useTransition();
+  const [activeCategorySlide, setActiveCategorySlide] = useState(0);
 
   const resetForm = useCallback(() => {
     setForm(initialForm);
@@ -87,6 +88,18 @@ export default function CategoryManager({ initialCategories = [] }) {
     refreshCategories();
   }
 
+  function handlePrevCategory() {
+    setActiveCategorySlide((current) =>
+      current === 0 ? initialCategories.length - 1 : current - 1,
+    );
+  }
+
+  function handleNextCategory() {
+    setActiveCategorySlide((current) =>
+      current === initialCategories.length - 1 ? 0 : current + 1,
+    );
+  }
+
   return (
     <div className="grid gap-8 lg:grid-cols-[360px_1fr]">
       <section className="rounded-xl border border-white/10 bg-white/5 p-6 text-zinc-200 shadow-[0_12px_28px_rgba(0,0,0,0.35)] backdrop-blur-md">
@@ -136,7 +149,7 @@ export default function CategoryManager({ initialCategories = [] }) {
         {message ? <p className="mt-4 text-sm text-zinc-300">{message}</p> : null}
       </section>
 
-      <section className="rounded-xl border border-white/10 bg-white/5 p-6 text-zinc-200 shadow-[0_12px_28px_rgba(0,0,0,0.35)] backdrop-blur-md">
+      <section className="min-w-0 rounded-xl border border-white/10 bg-white/5 p-6 text-zinc-200 shadow-[0_12px_28px_rgba(0,0,0,0.35)] backdrop-blur-md">
         <div className="flex items-center justify-between gap-4">
           <div>
             <h2 className="text-2xl font-semibold text-zinc-100">
@@ -161,40 +174,67 @@ export default function CategoryManager({ initialCategories = [] }) {
             Todavia no hay colecciones comerciales cargadas.
           </p>
         ) : (
-          <div className="mt-6 grid gap-4">
-            {initialCategories.map((category) => (
-              <article
-                key={category._id}
-                className="rounded-xl border border-white/10 bg-black/30 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-amber-500/40 hover:shadow-[0_0_15px_rgba(245,158,11,0.3)]"
+          <div className="mt-6 space-y-4">
+            <div className="flex items-center justify-end gap-2">
+              <button
+                className="rounded-md border border-zinc-700 px-3 py-1.5 text-xs font-semibold text-zinc-200 transition hover:border-amber-500/50 hover:text-amber-400"
+                type="button"
+                onClick={handlePrevCategory}
               >
-                <h3 className="text-xl font-semibold text-zinc-100">
-                  {category.name}
-                </h3>
-                <p className="mt-2 text-sm text-zinc-400">
-                  {category.description || "Sin descripcion"}
-                </p>
-                <p className="mt-3 break-all text-xs text-zinc-500">
-                  ID: {category._id}
-                </p>
+                Anterior
+              </button>
+              <span className="font-mono text-xs text-zinc-500">
+                {activeCategorySlide + 1}/{initialCategories.length}
+              </span>
+              <button
+                className="rounded-md border border-zinc-700 px-3 py-1.5 text-xs font-semibold text-zinc-200 transition hover:border-amber-500/50 hover:text-amber-400"
+                type="button"
+                onClick={handleNextCategory}
+              >
+                Siguiente
+              </button>
+            </div>
 
-                <div className="mt-4 flex gap-3">
-                  <button
-                    className="rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-2 text-sm font-semibold text-amber-300 transition-all hover:bg-amber-500/20"
-                    type="button"
-                    onClick={() => handleEdit(category)}
+            <div className="w-full overflow-hidden">
+              <div
+                className="flex w-full transition-transform duration-300 ease-out"
+                style={{ transform: `translateX(-${activeCategorySlide * 100}%)` }}
+              >
+                {initialCategories.map((category) => (
+                  <article
+                    key={category._id}
+                    className="w-full shrink-0 rounded-xl border border-white/10 bg-black/30 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-amber-500/40 hover:shadow-[0_0_15px_rgba(245,158,11,0.3)]"
                   >
-                    Editar
-                  </button>
-                  <button
-                    className="rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-2 text-sm font-semibold text-red-300 transition-all hover:bg-red-500/20"
-                    type="button"
-                    onClick={() => handleDelete(category._id)}
-                  >
-                    Eliminar
-                  </button>
-                </div>
-              </article>
-            ))}
+                    <h3 className="text-xl font-semibold text-zinc-100">
+                      {category.name}
+                    </h3>
+                    <p className="mt-2 text-sm text-zinc-400">
+                      {category.description || "Sin descripcion"}
+                    </p>
+                    <p className="mt-3 break-all text-xs text-zinc-500">
+                      ID: {category._id}
+                    </p>
+
+                    <div className="mt-4 flex gap-3">
+                      <button
+                        className="rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-2 text-sm font-semibold text-amber-300 transition-all hover:bg-amber-500/20"
+                        type="button"
+                        onClick={() => handleEdit(category)}
+                      >
+                        Editar
+                      </button>
+                      <button
+                        className="rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-2 text-sm font-semibold text-red-300 transition-all hover:bg-red-500/20"
+                        type="button"
+                        onClick={() => handleDelete(category._id)}
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
           </div>
         )}
       </section>

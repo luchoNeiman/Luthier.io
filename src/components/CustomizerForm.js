@@ -8,6 +8,9 @@ const DEFAULT_FILTERS = {
   subtype: "",
   color: "",
   orientation: "",
+  brand: "",
+  minPrice: "",
+  maxPrice: "",
 };
 
 function getImageSrc(image) {
@@ -228,6 +231,51 @@ export default function CustomizerForm({ options }) {
               ))}
             </select>
           </label>
+
+          <label className="block space-y-2 text-sm">
+            <span className="text-zinc-300">Marca</span>
+            <select
+              className="w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100 outline-none transition-all focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+              name="brand"
+              onChange={handleFilterChange}
+              value={filters.brand}
+            >
+              <option value="">Seleccionar marca</option>
+              {options.brands.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <div className="grid grid-cols-2 gap-3">
+            <label className="block space-y-2 text-sm">
+              <span className="text-zinc-300">Precio minimo</span>
+              <input
+                className="w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100 outline-none transition-all focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+                min="0"
+                name="minPrice"
+                onChange={handleFilterChange}
+                placeholder="0"
+                type="number"
+                value={filters.minPrice}
+              />
+            </label>
+
+            <label className="block space-y-2 text-sm">
+              <span className="text-zinc-300">Precio maximo</span>
+              <input
+                className="w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-zinc-100 outline-none transition-all focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+                min="0"
+                name="maxPrice"
+                onChange={handleFilterChange}
+                placeholder="999999"
+                type="number"
+                value={filters.maxPrice}
+              />
+            </label>
+          </div>
         </div>
 
         <button

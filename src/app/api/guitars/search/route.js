@@ -4,7 +4,7 @@ import Guitar from "@/models/Guitar";
 
 export const dynamic = "force-dynamic";
 
-const ALLOWED_FILTERS = ["type", "subtype", "color", "orientation"];
+const ALLOWED_FILTERS = ["type", "subtype", "color", "orientation", "brand"];
 
 export async function GET(request) {
   try {
@@ -16,6 +16,31 @@ export async function GET(request) {
 
       if (typeof value === "string" && value.trim() !== "") {
         searchCriteria[key] = value.trim();
+      }
+    }
+
+    const minPriceRaw = searchParams.get("minPrice")?.trim();
+    const maxPriceRaw = searchParams.get("maxPrice")?.trim();
+
+    if (minPriceRaw || maxPriceRaw) {
+      const priceCriteria = {};
+
+      if (minPriceRaw) {
+        const parsedMinPrice = Number(minPriceRaw);
+        if (!Number.isNaN(parsedMinPrice)) {
+          priceCriteria.$gte = parsedMinPrice;
+        }
+      }
+
+      if (maxPriceRaw) {
+        const parsedMaxPrice = Number(maxPriceRaw);
+        if (!Number.isNaN(parsedMaxPrice)) {
+          priceCriteria.$lte = parsedMaxPrice;
+        }
+      }
+
+      if (Object.keys(priceCriteria).length > 0) {
+        searchCriteria.price = priceCriteria;
       }
     }
 

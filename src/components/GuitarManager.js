@@ -38,6 +38,14 @@ export default function GuitarManager({
   const [message, setMessage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [isRefreshing, startRefreshTransition] = useTransition();
+  const [activeGuitarSlide, setActiveGuitarSlide] = useState(0);
+
+  const guitarsPerSlide = 2;
+  const guitarSlides = [];
+
+  for (let i = 0; i < initialGuitars.length; i += guitarsPerSlide) {
+    guitarSlides.push(initialGuitars.slice(i, i + guitarsPerSlide));
+  }
 
   const resetForm = useCallback(() => {
     setForm(initialForm);
@@ -130,6 +138,18 @@ export default function GuitarManager({
 
     setMessage(result.message);
     refreshGuitars();
+  }
+
+  function handlePrevGuitar() {
+    setActiveGuitarSlide((current) =>
+      current === 0 ? guitarSlides.length - 1 : current - 1,
+    );
+  }
+
+  function handleNextGuitar() {
+    setActiveGuitarSlide((current) =>
+      current === guitarSlides.length - 1 ? 0 : current + 1,
+    );
   }
 
   const inputClass =
@@ -405,7 +425,7 @@ export default function GuitarManager({
       </section>
 
       {/* SECCIÓN DEL LISTADO DE GUITARRAS */}
-      <section className="rounded-xl border border-white/10 bg-white/5 p-6 text-zinc-200 shadow-[0_12px_28px_rgba(0,0,0,0.35)] backdrop-blur-md">
+      <section className="min-w-0 rounded-xl border border-white/10 bg-white/5 p-6 text-zinc-200 shadow-[0_12px_28px_rgba(0,0,0,0.35)] backdrop-blur-md">
         <div className="flex items-center justify-between gap-4 border-b border-zinc-800 pb-4">
           <div>
             <h2 className="text-2xl font-semibold text-zinc-100">
@@ -430,95 +450,128 @@ export default function GuitarManager({
             No hay guitarras cargadas en el sistema todavía.
           </p>
         ) : (
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
-            {initialGuitars.map((guitar) => (
-              <article
-                key={guitar._id}
-                className="flex flex-col justify-between rounded-xl border border-white/10 bg-black/30 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-amber-500/40 hover:shadow-[0_0_15px_rgba(245,158,11,0.3)]"
+          <div className="mt-6 space-y-4">
+            <div className="flex items-center justify-end gap-2">
+              <button
+                className="rounded-md border border-zinc-700 px-3 py-1.5 text-xs font-semibold text-zinc-200 transition hover:border-amber-500/50 hover:text-amber-400"
+                type="button"
+                onClick={handlePrevGuitar}
               >
-                <div>
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <span className="mb-1 inline-block rounded-md border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-amber-300">
-                        {guitar.type}{" "}
-                        {guitar.subtype !== "No aplica"
-                          ? `• ${guitar.subtype}`
-                          : ""}
-                      </span>
-                      <h3 className="text-lg font-bold leading-tight text-zinc-100">
-                        {guitar.name}
-                      </h3>
-                      <p className="mt-1 text-xs text-zinc-400">
-                        {guitar.brand} {guitar.model} ({guitar.color})
-                      </p>
-                    </div>
-                    <div className="whitespace-nowrap text-right text-sm font-semibold text-zinc-100">
-                      <p className="font-mono text-amber-400">${guitar.price}</p>
-                      <p className="mt-0.5 font-mono text-xs font-normal text-zinc-400">
-                        Stock: {guitar.stock}
-                      </p>
-                    </div>
-                  </div>
+                Anterior
+              </button>
+              <span className="font-mono text-xs text-zinc-500">
+                {activeGuitarSlide + 1}/{guitarSlides.length}
+              </span>
+              <button
+                className="rounded-md border border-zinc-700 px-3 py-1.5 text-xs font-semibold text-zinc-200 transition hover:border-amber-500/50 hover:text-amber-400"
+                type="button"
+                onClick={handleNextGuitar}
+              >
+                Siguiente
+              </button>
+            </div>
 
-                  {/* CARACTERÍSTICAS TÉCNICAS ADICIONALES EN VISTA DE LISTA */}
-                  <div className="mt-3 grid grid-cols-2 gap-x-2 gap-y-1 rounded-md border border-zinc-800 bg-black/40 p-2 text-[11px] text-zinc-300">
-                    <p>
-                      <strong>Orientación:</strong> {guitar.orientation}
-                    </p>
-                    <p>
-                      <strong>Cuerdas:</strong> <span className="font-mono">{guitar.stringCount}</span> (
-                      {guitar.stringMaterial})
-                    </p>
-                    <p>
-                      <strong>Trastes:</strong> <span className="font-mono">{guitar.fretCount}</span>
-                    </p>
-                    <p>
-                      <strong>Pastillas:</strong> {guitar.pickupConfig}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-4 flex items-center justify-between gap-3 border-t border-white/10 pt-3">
-                  <p className="select-all break-all font-mono text-[10px] text-zinc-500">
-                    ID: {guitar._id}
-                  </p>
-
-                  <div className="flex gap-2 shrink-0">
-                    <button
-                      className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-1.5 text-xs font-semibold text-amber-300 transition-colors hover:bg-amber-500/20"
-                      type="button"
-                      onClick={() => handleEdit(guitar)}
-                    >
-                      Editar
-                    </button>
-                    <button
-                      className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-1.5 text-xs font-semibold text-red-300 transition-colors hover:bg-red-500/20"
-                      type="button"
-                      onClick={() => handleDelete(guitar._id)}
-                    >
-                      Eliminar
-                    </button>
-                  </div>
-                </div>
-
-                {guitar.categories?.length ? (
-                  <div className="mt-3 flex flex-wrap gap-1">
-                    {guitar.categories.map((category) => (
-                      <span
-                        key={
-                          typeof category === "string" ? category : category._id
-                        }
-                        className="rounded-md border border-zinc-800 bg-black/40 px-2 py-0.5 text-[10px] font-medium text-zinc-300"
+            <div className="w-full overflow-hidden">
+              <div
+                className="flex w-full transition-transform duration-300 ease-out"
+                style={{ transform: `translateX(-${activeGuitarSlide * 100}%)` }}
+              >
+                {guitarSlides.map((slide, slideIndex) => (
+                  <div key={slideIndex} className="grid w-full shrink-0 grid-cols-1 gap-4">
+                    {slide.map((guitar) => (
+                      <article
+                        key={guitar._id}
+                        className="flex w-full flex-col justify-between rounded-xl border border-white/10 bg-black/30 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-amber-500/40 hover:shadow-[0_0_15px_rgba(245,158,11,0.3)]"
                       >
-                        {typeof category === "string"
-                          ? category
-                          : category.name}
-                      </span>
+                        <div>
+                          <div className="flex items-start justify-between gap-4">
+                            <div>
+                              <span className="mb-1 inline-block rounded-md border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-amber-300">
+                                {guitar.type}{" "}
+                                {guitar.subtype !== "No aplica"
+                                  ? `• ${guitar.subtype}`
+                                  : ""}
+                              </span>
+                              <h3 className="text-lg font-bold leading-tight text-zinc-100">
+                                {guitar.name}
+                              </h3>
+                              <p className="mt-1 text-xs text-zinc-400">
+                                {guitar.brand} {guitar.model} ({guitar.color})
+                              </p>
+                            </div>
+                            <div className="whitespace-nowrap text-right text-sm font-semibold text-zinc-100">
+                              <p className="font-mono text-amber-400">${guitar.price}</p>
+                              <p className="mt-0.5 font-mono text-xs font-normal text-zinc-400">
+                                Stock: {guitar.stock}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* CARACTERÍSTICAS TÉCNICAS ADICIONALES EN VISTA DE LISTA */}
+                          <div className="mt-3 grid grid-cols-2 gap-x-2 gap-y-1 rounded-md border border-zinc-800 bg-black/40 p-2 text-[11px] text-zinc-300">
+                            <p>
+                              <strong>Orientación:</strong> {guitar.orientation}
+                            </p>
+                            <p>
+                              <strong>Cuerdas:</strong> <span className="font-mono">{guitar.stringCount}</span> (
+                              {guitar.stringMaterial})
+                            </p>
+                            <p>
+                              <strong>Trastes:</strong> <span className="font-mono">{guitar.fretCount}</span>
+                            </p>
+                            <p>
+                              <strong>Pastillas:</strong> {guitar.pickupConfig}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="mt-4 flex items-center justify-between gap-3 border-t border-white/10 pt-3">
+                          <p className="select-all break-all font-mono text-[10px] text-zinc-500">
+                            ID: {guitar._id}
+                          </p>
+
+                          <div className="flex gap-2 shrink-0">
+                            <button
+                              className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-1.5 text-xs font-semibold text-amber-300 transition-colors hover:bg-amber-500/20"
+                              type="button"
+                              onClick={() => handleEdit(guitar)}
+                            >
+                              Editar
+                            </button>
+                            <button
+                              className="rounded-md border border-red-500/40 bg-red-500/10 px-3 py-1.5 text-xs font-semibold text-red-300 transition-colors hover:bg-red-500/20"
+                              type="button"
+                              onClick={() => handleDelete(guitar._id)}
+                            >
+                              Eliminar
+                            </button>
+                          </div>
+                        </div>
+
+                        {guitar.categories?.length ? (
+                          <div className="mt-3 flex flex-wrap gap-1">
+                            {guitar.categories.map((category) => (
+                              <span
+                                key={
+                                  typeof category === "string"
+                                    ? category
+                                    : category._id
+                                }
+                                className="rounded-md border border-zinc-800 bg-black/40 px-2 py-0.5 text-[10px] font-medium text-zinc-300"
+                              >
+                                {typeof category === "string"
+                                  ? category
+                                  : category.name}
+                              </span>
+                            ))}
+                          </div>
+                        ) : null}
+                      </article>
                     ))}
                   </div>
-                ) : null}
-              </article>
-            ))}
+                ))}
+              </div>
+            </div>
           </div>
         )}
       </section>

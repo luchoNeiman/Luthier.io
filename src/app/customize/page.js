@@ -11,11 +11,12 @@ function sortAlphabetically(values) {
 export default async function CustomizePage() {
   await connectDB();
 
-  const [colors, types, subtypes, orientations] = await Promise.all([
+  const [colors, types, subtypes, orientations, brands] = await Promise.all([
     Guitar.distinct("color"),
     Guitar.distinct("type"),
     Guitar.distinct("subtype"),
     Guitar.distinct("orientation"),
+    Guitar.distinct("brand"),
   ]);
 
   return (
@@ -40,6 +41,7 @@ export default async function CustomizePage() {
             types: sortAlphabetically(types),
             subtypes: sortAlphabetically(subtypes),
             orientations: sortAlphabetically(orientations),
+            brands: sortAlphabetically(brands),
           }}
         />
       </div>
