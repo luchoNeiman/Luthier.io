@@ -13,6 +13,7 @@ function normalizeUser(userData) {
     _id: String(userData._id),
     name: String(userData.name ?? ""),
     email: String(userData.email ?? ""),
+    role: userData.role === "admin" ? "admin" : "user",
     favorites: Array.isArray(userData.favorites)
       ? userData.favorites.map((favorite) => String(favorite))
       : [],

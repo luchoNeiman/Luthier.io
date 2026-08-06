@@ -1,10 +1,19 @@
 import { jwtVerify, SignJWT } from "jose";
 
 export const AUTH_COOKIE_NAME = "auth_token";
+export const ADMIN_EMAIL = "admin@luthier.io";
 
 const secret = new TextEncoder().encode(
   process.env.JWT_SECRET || "dev-jwt-secret-change-me",
 );
+
+export function isHardcodedAdminEmail(email) {
+  return String(email || "").trim().toLowerCase() === ADMIN_EMAIL;
+}
+
+export function getRoleFromEmail(email) {
+  return isHardcodedAdminEmail(email) ? "admin" : "user";
+}
 
 export async function signAuthToken(payload) {
   return new SignJWT(payload)

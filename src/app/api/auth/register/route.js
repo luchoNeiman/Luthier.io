@@ -1,18 +1,23 @@
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 
-import { AUTH_COOKIE_NAME, getAuthCookieConfig, signAuthToken } from "@/lib/auth";
+import {
+  AUTH_COOKIE_NAME,
+  getAuthCookieConfig,
+  getRoleFromEmail,
+  signAuthToken,
+} from "@/lib/auth";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
 
-const ADMIN_EMAIL = "admin@luthier.io";
-
 function serializeUser(user) {
+  const role = getRoleFromEmail(user.email);
+
   return {
     _id: user._id.toString(),
     name: user.name,
     email: user.email,
-    role: user.role,
+    role,
     favorites: (user.favorites || []).map((favorite) => favorite.toString()),
   };
 }
@@ -42,7 +47,7 @@ export async function POST(request) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const role = email === ADMIN_EMAIL ? "admin" : "user";
+    const role = getRoleFromEmail(email);
 
     const user = await User.create({
       name,
@@ -54,7 +59,8 @@ export async function POST(request) {
 
     const token = await signAuthToken({
       sub: user._id.toString(),
-      role: user.role,
+      email: user.email,
+      role,
     });
 
     const cookieStore = await cookies();

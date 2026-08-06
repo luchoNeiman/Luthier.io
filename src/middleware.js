@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { AUTH_COOKIE_NAME, verifyAuthToken } from "@/lib/auth";
+import { AUTH_COOKIE_NAME, isHardcodedAdminEmail, verifyAuthToken } from "@/lib/auth";
 
 export async function middleware(request) {
   const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
@@ -11,8 +11,10 @@ export async function middleware(request) {
 
   try {
     const payload = await verifyAuthToken(token);
+    const isAdmin =
+      isHardcodedAdminEmail(payload.email) || payload.role === "admin";
 
-    if (payload.role !== "admin") {
+    if (!isAdmin) {
       const deniedUrl = new URL("/", request.url);
       deniedUrl.searchParams.set("error", "access-denied");
       return NextResponse.redirect(deniedUrl);

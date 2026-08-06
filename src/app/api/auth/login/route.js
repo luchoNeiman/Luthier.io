@@ -1,16 +1,23 @@
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 
-import { AUTH_COOKIE_NAME, getAuthCookieConfig, signAuthToken } from "@/lib/auth";
+import {
+  AUTH_COOKIE_NAME,
+  getAuthCookieConfig,
+  getRoleFromEmail,
+  signAuthToken,
+} from "@/lib/auth";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
 
 function serializeUser(user) {
+  const role = getRoleFromEmail(user.email);
+
   return {
     _id: user._id.toString(),
     name: user.name,
     email: user.email,
-    role: user.role,
+    role,
     favorites: (user.favorites || []).map((favorite) => favorite.toString()),
   };
 }
@@ -46,9 +53,12 @@ export async function POST(request) {
       );
     }
 
+    const role = getRoleFromEmail(user.email);
+
     const token = await signAuthToken({
       sub: user._id.toString(),
-      role: user.role,
+      email: user.email,
+      role,
     });
 
     const cookieStore = await cookies();

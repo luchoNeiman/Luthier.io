@@ -1,15 +1,17 @@
 import { cookies } from "next/headers";
 
-import { AUTH_COOKIE_NAME, verifyAuthToken } from "@/lib/auth";
+import { AUTH_COOKIE_NAME, getRoleFromEmail, verifyAuthToken } from "@/lib/auth";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
 
 function serializeUser(user) {
+  const role = getRoleFromEmail(user.email);
+
   return {
     _id: user._id.toString(),
     name: user.name,
     email: user.email,
-    role: user.role,
+    role,
     favorites: (user.favorites || []).map((favorite) => favorite.toString()),
   };
 }
