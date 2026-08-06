@@ -42,9 +42,6 @@ export default function Navbar() {
 
           <div className="ml-auto flex flex-wrap items-center gap-2 text-xs sm:text-sm">
             <span className="rounded-md border border-zinc-700 bg-black/30 px-3 py-1">
-              Carrito: {cartQuantity}
-            </span>
-            <span className="rounded-md border border-zinc-700 bg-black/30 px-3 py-1">
               Favoritos: {favorites.length}
             </span>
             <span className="rounded-md border border-zinc-700 bg-black/30 px-3 py-1">
@@ -68,6 +65,30 @@ export default function Navbar() {
                 Login Demo
               </button>
             )}
+
+            <Link
+              aria-label="Ir al carrito"
+              className="relative ml-1 inline-flex h-10 w-10 items-center justify-center rounded-md border border-zinc-700 bg-black/40 text-zinc-200 transition-colors hover:border-amber-400 hover:text-amber-300"
+              href="/cart"
+            >
+              <svg
+                aria-hidden="true"
+                className="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.8"
+                viewBox="0 0 24 24"
+              >
+                <circle cx="9" cy="20" r="1.5" />
+                <circle cx="18" cy="20" r="1.5" />
+                <path d="M3 4h2l2.2 10.5a1 1 0 0 0 1 .8h9.9a1 1 0 0 0 1-.8L21 8H7" />
+              </svg>
+              <span className="absolute -right-1.5 -top-1.5 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full border border-zinc-900 bg-amber-500 px-1 text-[10px] font-semibold leading-none text-zinc-950">
+                {cartQuantity}
+              </span>
+            </Link>
           </div>
         </div>
       </nav>

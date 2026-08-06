@@ -78,6 +78,32 @@ export function AppProvider({ children }) {
     );
   }
 
+  function incrementCartItem(cartItemId) {
+    setCart((previousCart) =>
+      previousCart.map((item) =>
+        item.cartItemId === cartItemId
+          ? { ...item, quantity: item.quantity + 1 }
+          : item,
+      ),
+    );
+  }
+
+  function decrementCartItem(cartItemId) {
+    setCart((previousCart) =>
+      previousCart.flatMap((item) => {
+        if (item.cartItemId !== cartItemId) {
+          return [item];
+        }
+
+        if (item.quantity <= 1) {
+          return [];
+        }
+
+        return [{ ...item, quantity: item.quantity - 1 }];
+      }),
+    );
+  }
+
   function clearCart() {
     setCart([]);
   }
@@ -115,6 +141,8 @@ export function AppProvider({ children }) {
       activeUser,
       addToCart,
       removeFromCart,
+      incrementCartItem,
+      decrementCartItem,
       clearCart,
       toggleFavorite,
       login,

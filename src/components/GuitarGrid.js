@@ -50,7 +50,7 @@ export default function GuitarGrid({ guitars = [] }) {
 }
 
 export function GuitarCard({ guitar, className = "", compact = false }) {
-  const { favorites, toggleFavorite } = useApp();
+  const { favorites, toggleFavorite, addToCart } = useApp();
   const [tilt, setTilt] = useState({
     rotateX: 0,
     rotateY: 0,
@@ -78,6 +78,15 @@ export function GuitarCard({ guitar, className = "", compact = false }) {
 
   function handleMouseLeave() {
     setTilt({ rotateX: 0, rotateY: 0, glowX: 50, glowY: 35 });
+  }
+
+  function handleAddToCart() {
+    addToCart(guitar, {
+      color: guitar.color || "",
+      orientation: guitar.orientation || "",
+      type: guitar.type || "",
+      subtype: guitar.subtype || "",
+    });
   }
 
   return (
@@ -109,6 +118,30 @@ export function GuitarCard({ guitar, className = "", compact = false }) {
         type="button"
       >
         {isFavorite ? "Favorito" : "Agregar Fav"}
+      </button>
+
+      <button
+        aria-label="Agregar al carrito"
+        className="absolute left-3 top-3 z-20 inline-flex h-9 w-9 items-center justify-center rounded-md border border-zinc-600 bg-black/50 text-zinc-300 transition-colors hover:border-amber-400 hover:text-amber-300"
+        onClick={handleAddToCart}
+        type="button"
+      >
+        <svg
+          aria-hidden="true"
+          className="h-4.5 w-4.5"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.8"
+          viewBox="0 0 24 24"
+        >
+          <circle cx="9" cy="20" r="1.4" />
+          <circle cx="18" cy="20" r="1.4" />
+          <path d="M3 4h2l2.1 10.2a1 1 0 0 0 1 .8h9.8a1 1 0 0 0 1-.8L21 8H7" />
+          <path d="M12 10v4" />
+          <path d="M10 12h4" />
+        </svg>
       </button>
 
       <div
