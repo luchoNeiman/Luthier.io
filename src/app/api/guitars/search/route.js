@@ -6,6 +6,27 @@ export const dynamic = "force-dynamic";
 
 const ALLOWED_FILTERS = ["type", "subtype", "color", "orientation", "brand"];
 
+function serializeGuitar(guitar) {
+  return {
+    _id: guitar._id.toString(),
+    name: guitar.name,
+    price: guitar.price,
+    stock: guitar.stock,
+    image: guitar.image,
+    categories: (guitar.categories || []).map((category) => category.toString()),
+    type: guitar.type,
+    subtype: guitar.subtype,
+    brand: guitar.brand,
+    model: guitar.model,
+    orientation: guitar.orientation,
+    color: guitar.color,
+    stringMaterial: guitar.stringMaterial,
+    stringCount: guitar.stringCount,
+    fretCount: guitar.fretCount,
+    pickupConfig: guitar.pickupConfig,
+  };
+}
+
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -52,16 +73,16 @@ export async function GET(request) {
     }
 
     await connectDB();
-    const guitar = await Guitar.findOne(searchCriteria).lean();
+    const guitars = await Guitar.find(searchCriteria).sort({ price: 1, name: 1 }).lean();
 
-    if (!guitar) {
+    if (guitars.length === 0) {
       return Response.json(
         { message: "No se encontro una guitarra para los filtros indicados" },
         { status: 404 },
       );
     }
 
-    return Response.json(guitar);
+    return Response.json(guitars.map(serializeGuitar));
   } catch (error) {
     return Response.json(
       {

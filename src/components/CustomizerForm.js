@@ -43,7 +43,8 @@ function formatCurrency(value) {
 export default function CustomizerForm({ options }) {
   const { addToCart, cart, clearCart } = useApp();
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
-  const [result, setResult] = useState(null);
+  const [results, setResults] = useState([]);
+  const [activeResultIndex, setActiveResultIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
 
@@ -74,7 +75,8 @@ export default function CustomizerForm({ options }) {
         });
 
         if (response.status === 404) {
-          setResult(null);
+          setResults([]);
+          setActiveResultIndex(0);
           return;
         }
 
@@ -82,11 +84,13 @@ export default function CustomizerForm({ options }) {
           throw new Error("No fue posible buscar guitarras");
         }
 
-        const guitar = await response.json();
-        setResult(guitar);
+        const guitars = await response.json();
+        setResults(Array.isArray(guitars) ? guitars : []);
+        setActiveResultIndex(0);
       } catch (error) {
         if (error.name !== "AbortError") {
-          setResult(null);
+          setResults([]);
+          setActiveResultIndex(0);
         }
       } finally {
         if (!controller.signal.aborted) {
@@ -102,7 +106,9 @@ export default function CustomizerForm({ options }) {
     };
   }, [activeFilters]);
 
-  const hasResult = Boolean(result);
+  const activeResult = results[activeResultIndex] ?? null;
+  const hasResult = Boolean(activeResult);
+  const hasMultipleResults = results.length > 1;
 
   function handleFilterChange(event) {
     const { name, value } = event.target;
@@ -112,8 +118,11 @@ export default function CustomizerForm({ options }) {
         (filterValue) => filterValue.trim() !== "",
       );
 
+      setJustAdded(false);
+
       if (!hasActiveFilters) {
-        setResult(null);
+        setResults([]);
+        setActiveResultIndex(0);
         setIsLoading(false);
       }
 
@@ -122,18 +131,30 @@ export default function CustomizerForm({ options }) {
   }
 
   function handleAddToCart() {
-    if (!result) {
+    if (!activeResult) {
       return;
     }
 
-    addToCart(result, {
-      color: filters.color || result.color || "",
-      orientation: filters.orientation || result.orientation || "",
-      type: filters.type || result.type || "",
-      subtype: filters.subtype || result.subtype || "",
+    addToCart(activeResult, {
+      color: filters.color || activeResult.color || "",
+      orientation: filters.orientation || activeResult.orientation || "",
+      type: filters.type || activeResult.type || "",
+      subtype: filters.subtype || activeResult.subtype || "",
     });
 
     setJustAdded(true);
+  }
+
+  function handlePreviousResult() {
+    setActiveResultIndex((currentIndex) =>
+      currentIndex === 0 ? results.length - 1 : currentIndex - 1,
+    );
+  }
+
+  function handleNextResult() {
+    setActiveResultIndex((currentIndex) =>
+      currentIndex === results.length - 1 ? 0 : currentIndex + 1,
+    );
   }
 
   const totalCartQuantity = cart.reduce(
@@ -156,20 +177,53 @@ export default function CustomizerForm({ options }) {
             </div>
           ) : hasResult ? (
             <div className="flex min-h-[408px] w-full flex-col justify-between gap-4">
+              {hasMultipleResults ? (
+                <div className="flex items-center justify-between gap-3 rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-xs uppercase tracking-[0.18em] text-zinc-400">
+                  <button
+                    className="rounded-md border border-zinc-700 px-2 py-1 text-zinc-300 transition-colors hover:border-amber-400 hover:text-amber-300"
+                    onClick={handlePreviousResult}
+                    type="button"
+                  >
+                    Anterior
+                  </button>
+                  <span>
+                    Opcion {activeResultIndex + 1} de {results.length}
+                  </span>
+                  <button
+                    className="rounded-md border border-zinc-700 px-2 py-1 text-zinc-300 transition-colors hover:border-amber-400 hover:text-amber-300"
+                    onClick={handleNextResult}
+                    type="button"
+                  >
+                    Siguiente
+                  </button>
+                </div>
+              ) : null}
+
               <div className="relative h-[340px] w-full overflow-hidden rounded-lg border border-white/10 bg-black/20">
                 <Image
-                  alt={result.name || "Guitarra personalizada"}
+                  alt={activeResult.name || "Guitarra personalizada"}
                   className="object-contain object-center p-3"
                   fill
                   sizes="(min-width: 1024px) 50vw, 100vw"
-                  src={getImageSrc(result.image)}
+                  src={getImageSrc(activeResult.image)}
                 />
               </div>
 
               <div>
-                <p className="text-lg font-semibold text-zinc-100">{result.name}</p>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <p className="text-lg font-semibold text-zinc-100">{activeResult.name}</p>
+                  <span className="rounded-md border border-zinc-700 bg-black/20 px-2 py-1 text-xs uppercase tracking-[0.15em] text-zinc-400">
+                    {activeResult.type}
+                    {activeResult.subtype && activeResult.subtype !== "No aplica"
+                      ? ` / ${activeResult.subtype}`
+                      : ""}
+                  </span>
+                </div>
                 <p className="font-mono text-xl font-semibold text-amber-300">
-                  {formatCurrency(result.price)}
+                  {formatCurrency(activeResult.price)}
+                </p>
+                <p className="mt-2 text-sm text-zinc-400">
+                  {activeResult.brand} · {activeResult.color} · {activeResult.orientation}
                 </p>
               </div>
             </div>
