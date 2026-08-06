@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { useApp } from "@/context/AppContext";
+import { formatCurrency } from "@/lib/shopUi";
 
 const INITIAL_CUSTOMER_DATA = {
   name: "",
@@ -11,20 +12,6 @@ const INITIAL_CUSTOMER_DATA = {
   phone: "",
   address: "",
 };
-
-function formatCurrency(value) {
-  const amount = Number(value);
-
-  if (Number.isNaN(amount)) {
-    return `$${value}`;
-  }
-
-  return new Intl.NumberFormat("es-AR", {
-    style: "currency",
-    currency: "ARS",
-    minimumFractionDigits: 2,
-  }).format(amount);
-}
 
 function buildOrderSnapshot(cart) {
   return cart.map((item) => {

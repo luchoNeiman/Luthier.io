@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useApp } from "@/context/AppContext";
+import { formatCurrency, getGuitarImageSrc } from "@/lib/shopUi";
 
 const DEFAULT_FILTERS = {
   type: "",
@@ -13,32 +14,6 @@ const DEFAULT_FILTERS = {
   minPrice: "",
   maxPrice: "",
 };
-
-function getImageSrc(image) {
-  if (!image) {
-    return "";
-  }
-
-  if (image.startsWith("/")) {
-    return image;
-  }
-
-  return `/images/guitars/${image}`;
-}
-
-function formatCurrency(value) {
-  const amount = Number(value);
-
-  if (Number.isNaN(amount)) {
-    return `$${value}`;
-  }
-
-  return new Intl.NumberFormat("es-AR", {
-    style: "currency",
-    currency: "ARS",
-    minimumFractionDigits: 2,
-  }).format(amount);
-}
 
 export default function CustomizerForm({ options }) {
   const { addToCart, cart, clearCart } = useApp();
@@ -205,7 +180,7 @@ export default function CustomizerForm({ options }) {
                   className="object-contain object-center p-3"
                   fill
                   sizes="(min-width: 1024px) 50vw, 100vw"
-                  src={getImageSrc(activeResult.image)}
+                  src={getGuitarImageSrc(activeResult.image)}
                 />
               </div>
 

@@ -4,32 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { useApp } from "@/context/AppContext";
-
-function getImageSrc(image) {
-  if (!image) {
-    return "";
-  }
-
-  if (image.startsWith("/")) {
-    return image;
-  }
-
-  return `/images/guitars/${image}`;
-}
-
-function formatCurrency(value) {
-  const amount = Number(value);
-
-  if (Number.isNaN(amount)) {
-    return `$${value}`;
-  }
-
-  return new Intl.NumberFormat("es-AR", {
-    style: "currency",
-    currency: "ARS",
-    minimumFractionDigits: 2,
-  }).format(amount);
-}
+import { formatCurrency, getGuitarImageSrc } from "@/lib/shopUi";
 
 export default function CartPage() {
   const { cart, incrementCartItem, decrementCartItem, removeFromCart } = useApp();
@@ -89,7 +64,7 @@ export default function CartPage() {
                       className="object-contain object-center p-2"
                       fill
                       sizes="(min-width: 768px) 160px, 100vw"
-                      src={getImageSrc(item.guitar.image)}
+                      src={getGuitarImageSrc(item.guitar.image)}
                     />
                   ) : (
                     <div className="flex h-full items-center justify-center text-sm text-zinc-500">
