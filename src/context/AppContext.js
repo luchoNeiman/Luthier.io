@@ -4,6 +4,21 @@ import { createContext, useContext, useMemo, useState } from "react";
 
 const AppContext = createContext(null);
 
+function normalizeUser(userData) {
+  if (!userData?._id) {
+    return null;
+  }
+
+  return {
+    _id: String(userData._id),
+    name: String(userData.name ?? ""),
+    email: String(userData.email ?? ""),
+    favorites: Array.isArray(userData.favorites)
+      ? userData.favorites.map((favorite) => String(favorite))
+      : [],
+  };
+}
+
 function normalizeSelectedOptions(selectedOptions = {}) {
   return {
     color: String(selectedOptions.color ?? ""),
@@ -113,25 +128,29 @@ export function AppProvider({ children }) {
       return;
     }
 
-    setFavorites((previousFavorites) =>
-      previousFavorites.includes(guitarId)
+    setFavorites((previousFavorites) => {
+      const nextFavorites = previousFavorites.includes(guitarId)
         ? previousFavorites.filter((id) => id !== guitarId)
-        : [...previousFavorites, guitarId],
-    );
+        : [...previousFavorites, guitarId];
+
+      setActiveUser((previousUser) =>
+        previousUser ? { ...previousUser, favorites: nextFavorites } : previousUser,
+      );
+
+      return nextFavorites;
+    });
   }
 
   function login(userData) {
-    const fallbackUser = {
-      id: "demo-user",
-      name: "Usuario Demo",
-      email: "demo@luthier.io",
-    };
+    const normalizedUser = normalizeUser(userData);
 
-    setActiveUser(userData ?? fallbackUser);
+    setActiveUser(normalizedUser);
+    setFavorites(normalizedUser?.favorites || []);
   }
 
   function logout() {
     setActiveUser(null);
+    setFavorites([]);
   }
 
   const value = useMemo(

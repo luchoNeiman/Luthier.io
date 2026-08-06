@@ -8,7 +8,7 @@ import { formatCurrency, getGuitarImageSrc } from "@/lib/shopUi";
 
 // Yo encapsulo la tarjeta para reutilizarla en catalogo, bento y colecciones.
 export default function GuitarCard({ guitar, className = "", compact = false }) {
-  const { favorites, toggleFavorite, addToCart } = useApp();
+  const { favorites, activeUser, toggleFavorite, addToCart } = useApp();
   const [tilt, setTilt] = useState({
     rotateX: 0,
     rotateY: 0,
@@ -65,18 +65,20 @@ export default function GuitarCard({ guitar, className = "", compact = false }) 
         }}
       />
 
-      <button
-        aria-label={isFavorite ? "Quitar de favoritos" : "Agregar a favoritos"}
-        className={`absolute right-3 top-3 z-20 rounded-md border px-2 py-1 text-xs font-medium transition-colors ${
-          isFavorite
-            ? "border-amber-400 bg-amber-500/20 text-amber-200"
-            : "border-zinc-600 bg-black/50 text-zinc-300 hover:border-amber-400 hover:text-amber-300"
-        }`}
-        onClick={() => toggleFavorite(guitar._id)}
-        type="button"
-      >
-        {isFavorite ? "Favorito" : "Agregar Fav"}
-      </button>
+      {activeUser ? (
+        <button
+          aria-label={isFavorite ? "Quitar de favoritos" : "Agregar a favoritos"}
+          className={`absolute right-3 top-3 z-20 rounded-md border px-2 py-1 text-xs font-medium transition-colors ${
+            isFavorite
+              ? "border-amber-400 bg-amber-500/20 text-amber-200"
+              : "border-zinc-600 bg-black/50 text-zinc-300 hover:border-amber-400 hover:text-amber-300"
+          }`}
+          onClick={() => toggleFavorite(guitar._id)}
+          type="button"
+        >
+          {isFavorite ? "Favorito" : "Agregar Fav"}
+        </button>
+      ) : null}
 
       <button
         aria-label="Agregar al carrito"
