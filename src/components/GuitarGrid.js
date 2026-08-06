@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Image from "next/image";
 
+import { useApp } from "@/context/AppContext";
+
 function getGuitarImageSrc(image) {
   if (!image) {
     return "";
@@ -48,12 +50,15 @@ export default function GuitarGrid({ guitars = [] }) {
 }
 
 export function GuitarCard({ guitar, className = "", compact = false }) {
+  const { favorites, toggleFavorite } = useApp();
   const [tilt, setTilt] = useState({
     rotateX: 0,
     rotateY: 0,
     glowX: 50,
     glowY: 35,
   });
+
+  const isFavorite = favorites.includes(guitar._id);
 
   function handleMouseMove(event) {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -92,6 +97,19 @@ export function GuitarCard({ guitar, className = "", compact = false }) {
           background: `radial-gradient(circle at ${tilt.glowX}% ${tilt.glowY}%, rgba(245,158,11,0.24), transparent 45%)`,
         }}
       />
+
+      <button
+        aria-label={isFavorite ? "Quitar de favoritos" : "Agregar a favoritos"}
+        className={`absolute right-3 top-3 z-20 rounded-md border px-2 py-1 text-xs font-medium transition-colors ${
+          isFavorite
+            ? "border-amber-400 bg-amber-500/20 text-amber-200"
+            : "border-zinc-600 bg-black/50 text-zinc-300 hover:border-amber-400 hover:text-amber-300"
+        }`}
+        onClick={() => toggleFavorite(guitar._id)}
+        type="button"
+      >
+        {isFavorite ? "Favorito" : "Agregar Fav"}
+      </button>
 
       <div
         className={compact ? "relative h-40 bg-black/20 md:h-44" : "relative aspect-[3/4] bg-black/20"}

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
+import { useApp } from "@/context/AppContext";
 
 const DEFAULT_FILTERS = {
   type: "",
@@ -40,9 +41,11 @@ function formatCurrency(value) {
 }
 
 export default function CustomizerForm({ options }) {
+  const { addToCart, cart, clearCart } = useApp();
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
   const [result, setResult] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [justAdded, setJustAdded] = useState(false);
 
   const activeFilters = useMemo(
     () =>
@@ -117,6 +120,26 @@ export default function CustomizerForm({ options }) {
       return nextFilters;
     });
   }
+
+  function handleAddToCart() {
+    if (!result) {
+      return;
+    }
+
+    addToCart(result, {
+      color: filters.color || result.color || "",
+      orientation: filters.orientation || result.orientation || "",
+      type: filters.type || result.type || "",
+      subtype: filters.subtype || result.subtype || "",
+    });
+
+    setJustAdded(true);
+  }
+
+  const totalCartQuantity = cart.reduce(
+    (accumulator, item) => accumulator + item.quantity,
+    0,
+  );
 
   return (
     <section className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -281,10 +304,57 @@ export default function CustomizerForm({ options }) {
         <button
           className="mt-6 w-full rounded-md bg-amber-600 px-4 py-2 font-medium text-zinc-900 transition-all enabled:hover:bg-amber-500 enabled:hover:shadow-[0_0_15px_rgba(245,158,11,0.3)] disabled:cursor-not-allowed disabled:opacity-50"
           disabled={!hasResult}
+          onClick={handleAddToCart}
           type="button"
         >
           Anadir al Carrito
         </button>
+
+        {justAdded ? (
+          <p className="mt-3 text-sm text-emerald-300">
+            Item agregado. Si repetis la misma configuracion, aumenta cantidad.
+          </p>
+        ) : null}
+
+        <section className="mt-6 rounded-lg border border-white/10 bg-black/20 p-4">
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-xs uppercase tracking-[0.2em] text-zinc-400">
+              Resumen de carrito
+            </p>
+            <button
+              className="rounded-md border border-zinc-700 px-2 py-1 text-xs text-zinc-300 transition-colors hover:border-red-400 hover:text-red-300 disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={cart.length === 0}
+              onClick={clearCart}
+              type="button"
+            >
+              Vaciar
+            </button>
+          </div>
+
+          <p className="mt-3 text-sm text-zinc-300">
+            Total de unidades: {totalCartQuantity}
+          </p>
+
+          {cart.length === 0 ? (
+            <p className="mt-2 text-sm text-zinc-500">No hay items en carrito.</p>
+          ) : (
+            <ul className="mt-3 space-y-2 text-sm text-zinc-300">
+              {cart.map((item) => (
+                <li
+                  key={item.cartItemId}
+                  className="rounded-md border border-white/10 bg-black/30 p-3"
+                >
+                  <p className="font-medium text-zinc-100">{item.guitar.name}</p>
+                  <p className="text-zinc-400">
+                    {item.selectedOptions.type} / {item.selectedOptions.subtype} /{" "}
+                    {item.selectedOptions.color} / {item.selectedOptions.orientation}
+                  </p>
+                  <p className="text-amber-300">Cantidad: {item.quantity}</p>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
       </article>
     </section>
   );
