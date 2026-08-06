@@ -2,14 +2,29 @@
 
 import { GuitarCard } from "@/components/GuitarGrid";
 
-const bentoSpans = [
-  "xl:col-span-6",
-  "xl:col-span-3",
-  "xl:col-span-3",
-  "xl:col-span-4",
-  "xl:col-span-5",
-  "xl:col-span-3",
-];
+function getBentoSpanClass(index) {
+  if (index === 0 || index === 1) {
+    return "md:col-span-6";
+  }
+
+  if (index >= 2 && index <= 5) {
+    return "md:col-span-3";
+  }
+
+  if (index === 6) {
+    return "md:col-span-8";
+  }
+
+  if (index === 7) {
+    return "md:col-span-4";
+  }
+
+  if (index >= 8 && index <= 10) {
+    return "md:col-span-4";
+  }
+
+  return "md:col-span-3";
+}
 
 export default function GuitarBentoGrid({ guitars = [] }) {
   if (guitars.length === 0) {
@@ -21,11 +36,11 @@ export default function GuitarBentoGrid({ guitars = [] }) {
   }
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-12 xl:grid-flow-dense">
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-12">
       {guitars.map((guitar, index) => (
         <GuitarCard
           key={guitar._id}
-          className={`h-full ${bentoSpans[index % bentoSpans.length]}`}
+          className={`col-span-1 ${getBentoSpanClass(index)}`}
           compact
           guitar={guitar}
         />

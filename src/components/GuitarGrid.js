@@ -82,7 +82,7 @@ export function GuitarCard({ guitar, className = "", compact = false }) {
 
   return (
     <article
-      className={`group relative overflow-hidden rounded-xl border border-white/10 bg-white/5 text-zinc-200 shadow-[0_12px_28px_rgba(0,0,0,0.35)] backdrop-blur-md transition-transform duration-300 ${className}`}
+      className={`group relative overflow-hidden rounded-xl border border-white/10 bg-white/5 text-zinc-200 shadow-[0_12px_28px_rgba(0,0,0,0.35)] backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-amber-500/40 hover:shadow-[0_0_15px_rgba(245,158,11,0.3)] ${className}`}
       onMouseLeave={handleMouseLeave}
       onMouseMove={handleMouseMove}
       style={{
@@ -112,7 +112,7 @@ export function GuitarCard({ guitar, className = "", compact = false }) {
       </button>
 
       <div
-        className={compact ? "relative h-40 bg-black/20 md:h-44" : "relative aspect-[3/4] bg-black/20"}
+        className={compact ? "relative min-h-[350px] bg-black/20" : "relative aspect-[3/4] min-h-[350px] bg-black/20"}
       >
         {guitar.image ? (
           <Image
