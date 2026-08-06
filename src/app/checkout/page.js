@@ -37,7 +37,7 @@ function buildOrderSnapshot(cart) {
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { cart, clearCart } = useApp();
+  const { cart, clearCart, activeUser } = useApp();
   const [customerData, setCustomerData] = useState(INITIAL_CUSTOMER_DATA);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -48,6 +48,18 @@ export default function CheckoutPage() {
       router.replace("/cart");
     }
   }, [cart.length, orderNumber, router]);
+
+  useEffect(() => {
+    if (!activeUser) {
+      return;
+    }
+
+    setCustomerData((previous) => ({
+      ...previous,
+      name: previous.name || activeUser.name || "",
+      email: previous.email || activeUser.email || "",
+    }));
+  }, [activeUser]);
 
   const itemsSnapshot = useMemo(() => buildOrderSnapshot(cart), [cart]);
   const total = useMemo(
@@ -75,6 +87,7 @@ export default function CheckoutPage() {
           customerData,
           items: itemsSnapshot,
           total,
+          user: activeUser?._id || null,
         }),
       });
 

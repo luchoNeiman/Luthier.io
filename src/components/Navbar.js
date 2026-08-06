@@ -97,6 +97,13 @@ export default function Navbar() {
                   <div className="absolute right-0 mt-2 w-48 rounded-md border border-white/10 bg-zinc-900/90 py-2 shadow-lg backdrop-blur-md">
                     <Link
                       className="block px-4 py-2 text-sm text-zinc-300 transition-colors hover:bg-white/5 hover:text-amber-500"
+                      href="/user"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Mi Cuenta
+                    </Link>
+                    <Link
+                      className="block px-4 py-2 text-sm text-zinc-300 transition-colors hover:bg-white/5 hover:text-amber-500"
                       href="/favorites"
                       onClick={() => setIsOpen(false)}
                     >

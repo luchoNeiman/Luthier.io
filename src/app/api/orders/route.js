@@ -1,8 +1,53 @@
 import { connectDB } from "@/lib/mongodb";
+import { getSessionPayload, isAdminSession } from "@/lib/serverAuth";
 import Order from "@/models/Order";
 
 function isNonEmptyString(value) {
   return typeof value === "string" && value.trim() !== "";
+}
+
+function serializeOrder(order) {
+  return {
+    _id: order._id.toString(),
+    orderNumber: order.orderNumber,
+    user: order.user
+      ? {
+          _id: order.user._id?.toString?.() || String(order.user._id || ""),
+          name: order.user.name || "",
+          email: order.user.email || "",
+        }
+      : null,
+    customerData: order.customerData,
+    items: order.items,
+    total: order.total,
+    status: order.status,
+    createdAt: order.createdAt,
+    updatedAt: order.updatedAt,
+  };
+}
+
+export async function GET() {
+  try {
+    const session = await getSessionPayload();
+
+    if (!isAdminSession(session)) {
+      return Response.json({ message: "No autorizado" }, { status: 403 });
+    }
+
+    await connectDB();
+
+    const orders = await Order.find()
+      .populate("user", "name email")
+      .sort({ createdAt: -1 })
+      .lean();
+
+    return Response.json(orders.map(serializeOrder), { status: 200 });
+  } catch (error) {
+    return Response.json(
+      { message: "Error al obtener ordenes", error: error.message },
+      { status: 500 },
+    );
+  }
 }
 
 export async function POST(request) {
