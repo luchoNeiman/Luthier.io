@@ -1,4 +1,10 @@
 import mongoose from "mongoose";
+import {
+  DEFAULT_SUBTYPE,
+  GUITAR_ORIENTATION_OPTIONS,
+  GUITAR_STRING_MATERIAL_OPTIONS,
+  GUITAR_TYPE_OPTIONS,
+} from "@/lib/guitarOptions";
 
 const guitarSchema = new mongoose.Schema(
   {
@@ -38,21 +44,12 @@ const guitarSchema = new mongoose.Schema(
     type: { //tipo de guitarra
       type: String,
       required: true,
-      enum: ["eléctrica", "acústica", "electroacústica"],
+      enum: GUITAR_TYPE_OPTIONS,
       trim: true,
     },
     subtype: { //subtipo de guitarra
       type: String,
-      enum: [
-        "Stratocaster",
-        "Telecaster",
-        "Les Paul",
-        "SG",
-        "Dreadnought",
-        "Clásica",
-        "No aplica",
-      ],
-      default: "No aplica",
+      default: DEFAULT_SUBTYPE,
       trim: true,
     },
     brand: { // marca de la guitarra
@@ -68,7 +65,7 @@ const guitarSchema = new mongoose.Schema(
     orientation: { // orientación de la guitarra
       type: String,
       required: true,
-      enum: ["diestro", "zurdo"],
+      enum: GUITAR_ORIENTATION_OPTIONS,
       trim: true,
     },
     color: { // color de la guitarra
@@ -79,7 +76,7 @@ const guitarSchema = new mongoose.Schema(
     stringMaterial: { // material de las cuerdas
       type: String,
       required: true,
-      enum: ["Nylon", "Acero", "Níquel"],
+      enum: GUITAR_STRING_MATERIAL_OPTIONS,
       trim: true,
     },
     stringCount: { // cantidad de cuerdas
@@ -104,10 +101,21 @@ const guitarSchema = new mongoose.Schema(
   },
 );
 
-if (mongoose.models.Guitar && !mongoose.models.Guitar.schema.path("type")) {
-  mongoose.deleteModel("Guitar");
+function hasLegacySubtypeEnum(model) {
+  const subtypeOptions = model?.schema?.path("subtype")?.options;
+  return Array.isArray(subtypeOptions?.enum);
 }
 
-const Guitar = mongoose.models.Guitar || mongoose.model("Guitar", guitarSchema);
+export function getGuitarModel() {
+  const existingModel = mongoose.models.Guitar;
+
+  if (existingModel && hasLegacySubtypeEnum(existingModel)) {
+    mongoose.deleteModel("Guitar");
+  }
+
+  return mongoose.models.Guitar || mongoose.model("Guitar", guitarSchema);
+}
+
+const Guitar = getGuitarModel();
 
 export default Guitar;

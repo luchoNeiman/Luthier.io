@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState, useTransition } from "react";
+import { useCallback, useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -8,6 +8,13 @@ import {
   deleteGuitar,
   updateGuitar,
 } from "@/app/actions/guitars";
+import {
+  BASE_SUBTYPE_SUGGESTIONS,
+  DEFAULT_SUBTYPE,
+  GUITAR_ORIENTATION_OPTIONS,
+  GUITAR_STRING_MATERIAL_OPTIONS,
+  GUITAR_TYPE_OPTIONS,
+} from "@/lib/guitarOptions";
 
 const initialForm = {
   name: "",
@@ -17,7 +24,7 @@ const initialForm = {
   image: "",
   categories: [],
   type: "",
-  subtype: "No aplica",
+  subtype: DEFAULT_SUBTYPE,
   brand: "",
   model: "",
   orientation: "",
@@ -39,6 +46,16 @@ export default function GuitarManager({
   const [isSaving, setIsSaving] = useState(false);
   const [isRefreshing, startRefreshTransition] = useTransition();
   const [activeGuitarSlide, setActiveGuitarSlide] = useState(0);
+
+  const subtypeSuggestions = useMemo(() => {
+    const dynamicSubtypes = initialGuitars
+      .map((guitar) => guitar.subtype)
+      .filter((subtype) => typeof subtype === "string" && subtype.trim() !== "");
+
+    return Array.from(new Set([...BASE_SUBTYPE_SUGGESTIONS, ...dynamicSubtypes])).sort(
+      (left, right) => left.localeCompare(right, "es"),
+    );
+  }, [initialGuitars]);
 
   const guitarsPerSlide = 2;
   const guitarSlides = [];
@@ -111,7 +128,7 @@ export default function GuitarManager({
         typeof category === "string" ? category : category._id,
       ),
       type: guitar.type || "",
-      subtype: guitar.subtype || "No aplica",
+      subtype: guitar.subtype || DEFAULT_SUBTYPE,
       brand: guitar.brand || "",
       model: guitar.model || "",
       orientation: guitar.orientation || "",
@@ -237,31 +254,29 @@ export default function GuitarManager({
                   <option value="" disabled>
                     Tipo Guitarra
                   </option>
-                  <option value="eléctrica">Eléctrica</option>
-                  <option value="acústica">Acústica</option>
-                  <option value="electroacústica">Electroacústica</option>
+                  {GUITAR_TYPE_OPTIONS.map((typeOption) => (
+                    <option key={typeOption} value={typeOption}>
+                      {typeOption.charAt(0).toUpperCase() + typeOption.slice(1)}
+                    </option>
+                  ))}
                 </select>
               </div>
 
               <div>
-                <select
-                  className={selectClass}
+                <input
+                  className={inputClass}
+                  list="guitar-subtypes"
                   name="subtype"
-                  value={form.subtype}
                   onChange={handleChange}
+                  placeholder="Subtipo (ej: Hollowbody, Superstrat)"
                   required
-                >
-                  <option value="" disabled>
-                    Subtipo
-                  </option>
-                  <option value="Stratocaster">Stratocaster</option>
-                  <option value="Telecaster">Telecaster</option>
-                  <option value="Les Paul">Les Paul</option>
-                  <option value="SG">SG</option>
-                  <option value="Dreadnought">Dreadnought</option>
-                  <option value="Clásica">Clásica</option>
-                  <option value="No aplica">No aplica</option>
-                </select>
+                  value={form.subtype}
+                />
+                <datalist id="guitar-subtypes">
+                  {subtypeSuggestions.map((subtypeOption) => (
+                    <option key={subtypeOption} value={subtypeOption} />
+                  ))}
+                </datalist>
               </div>
             </div>
 
@@ -295,8 +310,11 @@ export default function GuitarManager({
                 <option value="" disabled>
                   Orientación
                 </option>
-                <option value="diestro">Diestro</option>
-                <option value="zurdo">Zurdo</option>
+                {GUITAR_ORIENTATION_OPTIONS.map((orientationOption) => (
+                  <option key={orientationOption} value={orientationOption}>
+                    {orientationOption.charAt(0).toUpperCase() + orientationOption.slice(1)}
+                  </option>
+                ))}
               </select>
 
               <input
@@ -320,9 +338,11 @@ export default function GuitarManager({
                 <option value="" disabled>
                   Material Cuerdas
                 </option>
-                <option value="Nylon">Nylon</option>
-                <option value="Acero">Acero</option>
-                <option value="Níquel">Níquel</option>
+                {GUITAR_STRING_MATERIAL_OPTIONS.map((stringMaterialOption) => (
+                  <option key={stringMaterialOption} value={stringMaterialOption}>
+                    {stringMaterialOption}
+                  </option>
+                ))}
               </select>
 
               <input

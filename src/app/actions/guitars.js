@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 
 import { connectDB } from "@/lib/mongodb";
 import "@/models/Category";
-import Guitar from "@/models/Guitar";
+import { getGuitarModel } from "@/models/Guitar";
 
 function getGuitarPayload(formData) {
   return {
@@ -38,6 +38,7 @@ function revalidateGuitarsDashboard() {
 export async function createGuitar(_previousState, formData) {
   try {
     await connectDB();
+    const Guitar = getGuitarModel();
     await Guitar.create(getGuitarPayload(formData));
     revalidateGuitarsDashboard();
 
@@ -57,6 +58,7 @@ export async function updateGuitar(id, _previousState, formData) {
 
   try {
     await connectDB();
+    const Guitar = getGuitarModel();
 
     const guitar = await Guitar.findByIdAndUpdate(id, getGuitarPayload(formData), {
       new: true,
@@ -84,6 +86,7 @@ export async function deleteGuitar(id) {
 
   try {
     await connectDB();
+    const Guitar = getGuitarModel();
 
     const guitar = await Guitar.findByIdAndDelete(id);
 

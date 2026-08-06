@@ -1,7 +1,7 @@
 import { connectDB } from "@/lib/mongodb";
 import { getGuitars } from "@/lib/guitars";
 import "@/models/Category";
-import Guitar from "@/models/Guitar";
+import { getGuitarModel } from "@/models/Guitar";
 
 export const dynamic = "force-dynamic";
 
@@ -22,6 +22,7 @@ export async function POST(request) {
   try {
     const body = await request.json();
     await connectDB();
+    const Guitar = getGuitarModel();
 
     const guitar = await Guitar.create({
       name: body.name,

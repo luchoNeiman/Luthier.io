@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { connectDB } from "@/lib/mongodb";
 import { getGuitarById } from "@/lib/guitars";
 import "@/models/Category";
-import Guitar from "@/models/Guitar";
+import { getGuitarModel } from "@/models/Guitar";
 
 export const dynamic = "force-dynamic";
 
@@ -46,6 +46,7 @@ export async function PUT(request, { params }) {
   try {
     const body = await request.json();
     await connectDB();
+    const Guitar = getGuitarModel();
 
     const guitar = await Guitar.findByIdAndUpdate(
       id,
@@ -98,6 +99,7 @@ export async function DELETE(_request, { params }) {
 
   try {
     await connectDB();
+    const Guitar = getGuitarModel();
     const guitar = await Guitar.findByIdAndDelete(id);
 
     if (!guitar) {
