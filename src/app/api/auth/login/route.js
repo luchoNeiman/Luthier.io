@@ -1,5 +1,7 @@
 import bcrypt from "bcryptjs";
+import { cookies } from "next/headers";
 
+import { AUTH_COOKIE_NAME, getAuthCookieConfig, signAuthToken } from "@/lib/auth";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
 
@@ -8,6 +10,7 @@ function serializeUser(user) {
     _id: user._id.toString(),
     name: user.name,
     email: user.email,
+    role: user.role,
     favorites: (user.favorites || []).map((favorite) => favorite.toString()),
   };
 }
@@ -43,6 +46,14 @@ export async function POST(request) {
       );
     }
 
+    const token = await signAuthToken({
+      sub: user._id.toString(),
+      role: user.role,
+    });
+
+    const cookieStore = await cookies();
+    cookieStore.set(AUTH_COOKIE_NAME, token, getAuthCookieConfig());
+
     return Response.json(serializeUser(user), { status: 200 });
   } catch (error) {
     return Response.json(
@@ -51,3 +62,4 @@ export async function POST(request) {
     );
   }
 }
+

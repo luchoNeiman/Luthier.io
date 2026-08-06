@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 const AppContext = createContext(null);
 
@@ -50,6 +50,29 @@ export function AppProvider({ children }) {
   const [cart, setCart] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const [activeUser, setActiveUser] = useState(null);
+
+  useEffect(() => {
+    async function restoreSession() {
+      try {
+        const response = await fetch("/api/auth/me", { cache: "no-store" });
+
+        if (!response.ok) {
+          return;
+        }
+
+        const payload = await response.json();
+        const normalizedUser = normalizeUser(payload);
+
+        setActiveUser(normalizedUser);
+        setFavorites(normalizedUser?.favorites || []);
+      } catch {
+        setActiveUser(null);
+        setFavorites([]);
+      }
+    }
+
+    restoreSession();
+  }, []);
 
   function addToCart(guitar, selectedOptions) {
     if (!guitar || !guitar._id) {
@@ -148,7 +171,13 @@ export function AppProvider({ children }) {
     setFavorites(normalizedUser?.favorites || []);
   }
 
-  function logout() {
+  async function logout() {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } catch {
+      // Ignoro el error porque igualmente cierro la sesion local.
+    }
+
     setActiveUser(null);
     setFavorites([]);
   }

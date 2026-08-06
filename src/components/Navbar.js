@@ -9,7 +9,6 @@ const links = [
   { href: "/", label: "Home" },
   { href: "/categories", label: "Colecciones" },
   { href: "/customize", label: "Custom Shop" },
-  { href: "/dashboard", label: "Dashboard" },
 ];
 
 export default function Navbar() {
@@ -21,6 +20,14 @@ export default function Navbar() {
     () => cart.reduce((accumulator, item) => accumulator + item.quantity, 0),
     [cart],
   );
+
+  const navigationLinks = useMemo(() => {
+    if (activeUser?.role === "admin") {
+      return [...links, { href: "/dashboard", label: "Dashboard" }];
+    }
+
+    return links;
+  }, [activeUser]);
 
   useEffect(() => {
     function handleOutsideClick(event) {
@@ -42,7 +49,7 @@ export default function Navbar() {
 
         <div className="flex flex-wrap gap-2 sm:items-center sm:justify-between">
           <div className="flex flex-wrap gap-2">
-            {links.map((link) => (
+            {navigationLinks.map((link) => (
               <Link
                 key={link.href}
                 className="rounded-md border border-transparent px-3 py-2 text-sm font-medium text-stone-300 transition-colors hover:text-amber-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
@@ -97,8 +104,8 @@ export default function Navbar() {
                     </Link>
                     <button
                       className="block w-full px-4 py-2 text-left text-sm text-zinc-300 transition-colors hover:bg-white/5 hover:text-amber-500"
-                      onClick={() => {
-                        logout();
+                      onClick={async () => {
+                        await logout();
                         setIsOpen(false);
                       }}
                       type="button"
