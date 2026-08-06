@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 import { useApp } from "@/context/AppContext";
 import { formatCurrency, getGuitarImageSrc } from "@/lib/shopUi";
@@ -107,19 +108,21 @@ export default function GuitarCard({ guitar, className = "", compact = false }) 
       <div
         className={compact ? "relative min-h-[350px] bg-black/20" : "relative aspect-[3/4] min-h-[350px] bg-black/20"}
       >
-        {guitar.image ? (
-          <Image
-            alt={guitar.name || "Guitarra de Autor Custom"}
-            className={compact ? "object-contain object-center p-2.5" : "object-contain object-center p-3"}
-            fill
-            sizes={compact ? "(min-width: 1280px) 25vw, (min-width: 768px) 33vw, 100vw" : "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"}
-            src={getGuitarImageSrc(guitar.image)}
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center px-6 text-center text-sm text-zinc-500">
-            Sin imagen
-          </div>
-        )}
+        <Link className="absolute inset-0 block" href={`/guitars/${guitar._id}`}>
+          {guitar.image ? (
+            <Image
+              alt={guitar.name || "Guitarra de Autor Custom"}
+              className={compact ? "object-contain object-center p-2.5" : "object-contain object-center p-3"}
+              fill
+              sizes={compact ? "(min-width: 1280px) 25vw, (min-width: 768px) 33vw, 100vw" : "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"}
+              src={getGuitarImageSrc(guitar.image)}
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center px-6 text-center text-sm text-zinc-500">
+              Sin imagen
+            </div>
+          )}
+        </Link>
       </div>
 
       <div className={compact ? "relative z-10 p-4" : "relative z-10 p-5"}>
@@ -137,9 +140,11 @@ export default function GuitarCard({ guitar, className = "", compact = false }) 
         </div>
 
         <div className="flex items-start justify-between gap-4">
-          <h2 className={compact ? "mt-2 text-base font-semibold text-zinc-100" : "mt-3 text-lg font-semibold text-zinc-100"}>
-            {guitar.name}
-          </h2>
+          <Link href={`/guitars/${guitar._id}`}>
+            <h2 className={compact ? "mt-2 text-base font-semibold text-zinc-100 transition-colors hover:text-amber-300" : "mt-3 text-lg font-semibold text-zinc-100 transition-colors hover:text-amber-300"}>
+              {guitar.name}
+            </h2>
+          </Link>
           <p className={compact ? "mt-2 shrink-0 font-mono text-sm font-semibold text-amber-300" : "mt-3 shrink-0 font-mono text-base font-semibold text-amber-300"}>
             {formatCurrency(guitar.price)}
           </p>
@@ -164,6 +169,13 @@ export default function GuitarCard({ guitar, className = "", compact = false }) 
         <p className={compact ? "mt-3 border-t border-white/10 pt-2 font-mono text-[10px] uppercase tracking-[0.12em] text-zinc-500" : "mt-4 border-t border-white/10 pt-3 font-mono text-xs uppercase tracking-[0.12em] text-zinc-500"}>
           Stock: {String(guitar.stock).padStart(2, "0")}
         </p>
+
+        <Link
+          className="mt-3 inline-flex text-xs font-medium uppercase tracking-[0.18em] text-zinc-400 transition-colors hover:text-amber-300"
+          href={`/guitars/${guitar._id}`}
+        >
+          Ver detalle
+        </Link>
       </div>
     </article>
   );
