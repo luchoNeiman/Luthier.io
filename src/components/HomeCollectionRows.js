@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 import { GuitarCard } from "@/components/GuitarGrid";
 
@@ -24,55 +24,18 @@ export default function HomeCollectionRows({ collections = [] }) {
 
 function CollectionRow({ collection }) {
   const sliderRef = useRef(null);
-  const dragStateRef = useRef({
-    active: false,
-    startX: 0,
-    startScrollLeft: 0,
-  });
-  const [isDragging, setIsDragging] = useState(false);
 
-  function handlePointerDown(event) {
-    if (event.pointerType === "mouse" && event.button !== 0) {
-      return;
-    }
-
+  function scrollSlider(direction) {
     const slider = sliderRef.current;
 
     if (!slider) {
       return;
     }
 
-    dragStateRef.current = {
-      active: true,
-      startX: event.clientX,
-      startScrollLeft: slider.scrollLeft,
-    };
-
-    slider.setPointerCapture?.(event.pointerId);
-    setIsDragging(true);
-  }
-
-  function handlePointerMove(event) {
-    const slider = sliderRef.current;
-    const dragState = dragStateRef.current;
-
-    if (!slider || !dragState.active) {
-      return;
-    }
-
-    const deltaX = event.clientX - dragState.startX;
-    slider.scrollLeft = dragState.startScrollLeft - deltaX;
-  }
-
-  function stopDragging(event) {
-    const slider = sliderRef.current;
-
-    if (dragStateRef.current.active) {
-      slider?.releasePointerCapture?.(event.pointerId);
-    }
-
-    dragStateRef.current.active = false;
-    setIsDragging(false);
+    const cardWidth = 304;
+    const gap = 16;
+    const step = cardWidth + gap;
+    slider.scrollBy({ left: direction * step, behavior: "smooth" });
   }
 
   return (
@@ -97,18 +60,35 @@ function CollectionRow({ collection }) {
       </div>
 
       <div className="relative mt-5">
+        {collection.guitars?.length ? (
+          <>
+            <button
+              aria-label="Ver productos anteriores"
+              className="absolute left-2 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-zinc-700 bg-zinc-950/90 text-zinc-200 transition-colors hover:border-amber-400 hover:text-amber-300 md:inline-flex"
+              onClick={() => scrollSlider(-1)}
+              type="button"
+            >
+              <span aria-hidden="true">&#10094;</span>
+            </button>
+
+            <button
+              aria-label="Ver productos siguientes"
+              className="absolute right-2 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-zinc-700 bg-zinc-950/90 text-zinc-200 transition-colors hover:border-amber-400 hover:text-amber-300 md:inline-flex"
+              onClick={() => scrollSlider(1)}
+              type="button"
+            >
+              <span aria-hidden="true">&#10095;</span>
+            </button>
+          </>
+        ) : null}
+
         <div className="pointer-events-none absolute inset-y-0 left-0 z-10 hidden w-12 bg-gradient-to-r from-zinc-950 via-zinc-950/70 to-transparent md:block" />
         <div className="pointer-events-none absolute inset-y-0 right-0 z-10 hidden w-12 bg-gradient-to-l from-zinc-950 via-zinc-950/70 to-transparent md:block" />
 
         {collection.guitars?.length ? (
           <div
             ref={sliderRef}
-            className={`hide-scrollbar flex gap-4 overflow-x-auto pb-3 [scrollbar-width:none] [scroll-snap-type:x_mandatory] [touch-action:pan-y] ${isDragging ? "cursor-grabbing select-none" : "cursor-grab"}`}
-            onPointerCancel={stopDragging}
-            onPointerDown={handlePointerDown}
-            onPointerLeave={stopDragging}
-            onPointerMove={handlePointerMove}
-            onPointerUp={stopDragging}
+            className="hide-scrollbar flex gap-4 overflow-x-auto pb-3 [scrollbar-width:none] [scroll-snap-type:x_mandatory]"
           >
             {collection.guitars.map((guitar) => (
               <GuitarCard
